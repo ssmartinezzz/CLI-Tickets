@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -14,8 +14,8 @@ def addTicket(socket,lock):
 
     ticketrecv = recvJson(socket)
     print(ticketrecv)
-
-    ticket = Ticket(title=ticketrecv['title'],author=ticketrecv['author'],description=ticketrecv['description'],status="pending",date=datetime.date.today())
+    datetoday = datetime.date.today()
+    ticket = Ticket(title=ticketrecv['title'],author=ticketrecv['author'],description=ticketrecv['description'],status="pending",date=datetoday)
 
     session.add(ticket)
 
