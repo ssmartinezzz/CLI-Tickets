@@ -10,13 +10,17 @@ import messages
 
 def newClient(clientsocket,address):
     print(messages.SV_THREAD)
-    print(messages.SV_CONNECTION,address)
-    while True:
-        msg = "Testing architecture"
-        clientsocket.send(msg.encode())
-        clientmsg = clientsocket.recv(1024)
-        print(clientmsg.decode())
 
+    print(messages.SV_CONNECTION,address)
+
+    while True:
+
+        clientOpt = clientsocket.recv(1024)
+
+        if (clientOpt.decode() == 'INSERT'):
+
+        if (clientOpt.decode() == 'EXIT'):
+            
 
 if __name__ == "__main__":
 
