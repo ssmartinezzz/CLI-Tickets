@@ -1,6 +1,7 @@
 import socket
 import threading
 import sys
+import messages
 
 
 
@@ -8,8 +9,8 @@ import sys
 
 
 def newClient(clientsocket,address):
-    print(SV_THREAD)
-    print(SV_CONNECTION,address)
+    print(messages.SV_THREAD)
+    print(messages.SV_CONNECTION,address)
     while True:
         msg = "Testing architecture"
         clientsocket.send(msg.encode())
@@ -19,19 +20,13 @@ def newClient(clientsocket,address):
 
 if __name__ == "__main__":
 
-    SV_START = "Server starting...\n"
-    SV_WAITING = "Server waiting for clients \n"
-    SV_CONNECTION = "Server got connection from"
-    SV_THREAD = "Initializing thread.."
-    SCKT_ERROR = "Error while creating the socket. Stopping execution"
-
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     except socket.error:
-        print(SCKT_ERROR)
+        print(messages.SCKT_ERROR)
         sys.exit()
-
+    print(messages.SCKT_CREATED)
 
     host = '127.0.0.1'
 
@@ -41,9 +36,9 @@ if __name__ == "__main__":
 
     s.listen(5)
 
-    print(SV_START)
+    print(messages.SV_START)
 
-    print(SV_WAITING)
+    print(messages.SV_WAITING)
 
 
     while True:

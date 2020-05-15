@@ -2,8 +2,7 @@ import socket
 import sys
 import os
 import getopt
-
-
+import messages
 
 
 
@@ -14,10 +13,9 @@ if __name__ == "__main__":
     for (op, ar) in opt:
         if op == '-a':
             a = str(ar)
-            
+
         elif op == '-p':
             p = int(ar)
-
 
     host = a
 
@@ -26,10 +24,10 @@ if __name__ == "__main__":
     try:
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     except socket.error:
-        print('Fallo al crear el socket!')
+        print(messages.SCKT_ERROR)
         sys.exit()
 
-    print('Socket Creado!')
+    print(messages.SCKT_CREATED)
 
 
     client.connect((host, port))
