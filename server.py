@@ -2,25 +2,26 @@ import socket
 import threading
 import sys
 import messages
+from dbFunctions import *
 
 
 
-
-
-
-def newClient(clientsocket,address):
+def newClient(clientsocket, address):
     print(messages.SV_THREAD)
 
-    print(messages.SV_CONNECTION,address)
+    print(messages.SV_CONNECTION, address)
 
+    lock = threading.Lock()
     while True:
 
         clientOpt = clientsocket.recv(1024)
 
         if (clientOpt.decode() == 'INSERT'):
 
-        if (clientOpt.decode() == 'EXIT'):
-            
+            addTicket(clientsocket,lock)
+
+        """if (clientOpt.decode() == 'EXIT'):"""
+
 
 if __name__ == "__main__":
 
@@ -44,9 +45,11 @@ if __name__ == "__main__":
 
     print(messages.SV_WAITING)
 
-
     while True:
-        c,addr = s.accept()
-        th = threading.Thread(target=newClient, args=(c,addr))
+        c, addr = s.accept()
+
+        th = threading.Thread(target=newClient, args=(c, addr))
+
         th.start()
+
     c.close()

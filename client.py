@@ -3,8 +3,8 @@ import sys
 import os
 import getopt
 import messages
-
-
+from jsonService import *
+import datetime
 
 if __name__ == "__main__":
 
@@ -14,15 +14,11 @@ if __name__ == "__main__":
 
         if op == '-a':
 
-            a = str(ar)
+            host = str(ar)
 
         elif op == '-p':
 
-            p = int(ar)
-
-    host = a
-
-    port = p
+            port = int(ar)
 
     try:
 
@@ -47,23 +43,23 @@ if __name__ == "__main__":
 
         if (chosenOption == 'INSERT'):
 
-            print(messages.OPT_ADD_TICK,messages.ADD_TITLE)
+            print(messages.OPT_ADD_TICK, messages.ADD_TITLE)
 
             tTitle = input()
-
-            client.send(tTitle.encode())
 
             print(messages.ADD_AUTHOR)
 
             tAuth = input()
 
-            client.send(tAuth.encode())
-
             print(messages.ADD_DESCRIPTION)
 
             tDescr = input()
 
-            client.send(tDescr.encode())
+            ticket = {'title':tTitle,'author':tAuth,'description':tDescr}
+
+            sendJson(client,ticket)
+
+
 
         elif (chosenOption == 'LIST'):
 
@@ -84,16 +80,6 @@ if __name__ == "__main__":
             break
 
         else:
-            print(messages.OPT_WRONG)   
-
-
-
-
-
-
-
-
-
-
+            print(messages.OPT_WRONG)
 
     client.close()
