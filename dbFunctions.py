@@ -1,6 +1,7 @@
 import datetime
 
 
+
 from sqlalchemy.exc import SQLAlchemyError
 
 from dbConfiguration import *
@@ -24,6 +25,8 @@ def addTicket(socket,lock):
 
     ticket.date = datetoday
 
+    ticket.status = "pending"
+
     session.add(ticket)
 
     try:
@@ -43,7 +46,7 @@ def listTicketsbyDateAuthOrStatus(socket):
     kwargs = recvJson(socket)
 
     return session.query(Ticket)  \
-        .filter((Ticket.author ==['author'])|(Ticket.date == ['date']) |(Ticket.status == ['status']))
+        .filter((Ticket.author == kwargs['author'])|(Ticket.date == kwargs['date']) |(Ticket.status == kwargs['status']))
 
 
 

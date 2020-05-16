@@ -4,7 +4,7 @@ import os
 import getopt
 import messages
 from jsonService import *
-import datetime
+from utils import *
 
 if __name__ == "__main__":
 
@@ -71,11 +71,13 @@ if __name__ == "__main__":
 
             searchDate = input()
 
+            searchDate = formatDate(searchDate)
+
             print(messages.SRCH_STATUS)
 
             searchStatus = input()
 
-            filter = {'author':searchAuth,'date':searchDate,'status':searchStatus}
+            filter = {'author':searchAuth,'date':convertDateJson(searchDate),'status':searchStatus}
 
             sendJson(client,filter)
 

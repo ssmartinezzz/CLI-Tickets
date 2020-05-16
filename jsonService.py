@@ -1,16 +1,17 @@
 import json
-import models
+import datetime
 def sendJson(socket,data):
 
     json_data = json.dumps(data).encode()
     socket.send(json_data)
 
-"""
-    json_data = json.JSONEncoder().encode(data)
 
-    socket.send(json_data)
 
-"""
+def convertDateJson(o):
+    if isinstance(o, datetime.datetime):
+        return o.__str__()
+
+
 def recvJson(socket):
 
     recv_data = socket.recv(1024)
@@ -19,7 +20,7 @@ def recvJson(socket):
 
 def sendTicketToJson(data):
 
-    return json.dumps({'Filtred tickets':[ticket.ticketToJson() for ticket in data]})
+    return json.dumps({'Filtred tickets':[ticket.ticketToJson() for ticket in data]},indent=4)
 
 
 

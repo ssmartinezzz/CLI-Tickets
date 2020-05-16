@@ -25,7 +25,7 @@ OPT_LIST_TICK = "You've selected to list ticket/s.\n"
 
 OPT_EDIT_TICK = "You've selected to edit a ticket.\n"
 
-OPT_FILTER_TICK = "You've selected to create a new ticket.\n"
+OPT_FILTER_TICK = "You've selected to filter new ticket.\n"
 
 OPT_EXPORT_TICK = "You've selected to export ticket/s.\n"
 
@@ -39,6 +39,6 @@ ADD_AUTHOR = "PLEASE ADD TICKET AUTHOR"
 
 ADD_DESCRIPTION = "PLEASE ADD A TICKET DESCRIPTION"
 
-SRCH_DATE = "PLEASE ENTER A DATE TO FILTER. FORMAT YYYY-MM-dd"
+SRCH_DATE = "PLEASE ENTER A DATE TO FILTER. FORMAT dd/MM/YYYY"
 
 SRCH_STATUS = "PLEASE ENTER A STATUS TO FILTER"
