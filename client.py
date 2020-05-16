@@ -63,7 +63,25 @@ if __name__ == "__main__":
 
         elif (chosenOption == 'LIST'):
 
-            print(messages.OPT_LIST_TICK)
+            print(messages.OPT_LIST_TICK,messages.ADD_AUTHOR)
+
+            searchAuth = input()
+
+            print(messages.SRCH_DATE)
+
+            searchDate = input()
+
+            print(messages.SRCH_STATUS)
+
+            searchStatus = input()
+
+            filter = {'author':searchAuth,'date':searchDate,'status':searchStatus}
+
+            sendJson(client,filter)
+
+            searchResult = client.recv(1024)
+
+            print(searchResult.decode())
 
         elif (chosenOption == 'EDIT'):
 

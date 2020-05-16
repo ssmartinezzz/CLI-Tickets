@@ -14,18 +14,24 @@ def newClient(clientsocket, address):
     lock = threading.Lock()
     while True:
 
-        clientOpt = clientsocket.recv(1024)
+        client_opt = clientsocket.recv(1024)
 
-        if (clientOpt.decode() == 'INSERT'):
+        if (client_opt.decode() == 'INSERT'):
 
-            addTicket(clientsocket,lock)
+             addTicket(clientsocket,lock)
 
-        """if (clientOpt.decode() == 'EXIT'):"""
+        if (client_opt.decode() == 'LIST'):
+
+            ticketSearch  = listTicketsbyDateAuthOrStatus(clientsocket)
+
+            clientsocket.send(sendTicketToJson(ticketSearch).encode())
+
 
 
 if __name__ == "__main__":
 
     try:
+
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     except socket.error:
