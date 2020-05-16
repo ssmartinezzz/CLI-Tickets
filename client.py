@@ -34,72 +34,71 @@ if __name__ == "__main__":
 
     client.connect((host, port))
 
-    while True:
-        print(messages.CLIENT_MENU)
+    print(messages.CLIENT_MENU)
 
-        chosenOption = input('Option: ').upper()
+    chosenOption = input('Option: ').upper()
 
-        client.send(chosenOption.encode())
+    client.send(chosenOption.encode())
 
-        if (chosenOption == 'INSERT'):
+    if (chosenOption == 'INSERT'):
 
-            print(messages.OPT_ADD_TICK, messages.ADD_TITLE)
+        print(messages.OPT_ADD_TICK, messages.ADD_TITLE)
 
-            tTitle = input()
+        tTitle = input()
 
-            print(messages.ADD_AUTHOR)
+        print(messages.ADD_AUTHOR)
 
-            tAuth = input()
+        tAuth = input()
 
-            print(messages.ADD_DESCRIPTION)
+        print(messages.ADD_DESCRIPTION)
 
-            tDescr = input()
+        tDescr = input()
 
-            ticket = {'title':tTitle,'author':tAuth,'description':tDescr}
+        ticket = {'title': tTitle, 'author': tAuth, 'description': tDescr}
 
-            sendJson(client,ticket)
-
+        sendJson(client, ticket)
 
 
-        elif (chosenOption == 'LIST'):
 
-            print(messages.OPT_LIST_TICK,messages.ADD_AUTHOR)
+    elif (chosenOption == 'LIST'):
 
-            searchAuth = input()
+        print(messages.OPT_LIST_TICK, messages.ADD_AUTHOR)
 
-            print(messages.SRCH_DATE)
+        searchAuth = input()
 
-            searchDate = input()
+        print(messages.SRCH_DATE)
 
-            searchDate = formatDate(searchDate)
+        searchDate = input()
 
-            print(messages.SRCH_STATUS)
+        searchDate = formatDate(searchDate)
 
-            searchStatus = input()
+        print(messages.SRCH_STATUS)
 
-            filter = {'author':searchAuth,'date':convertDateJson(searchDate),'status':searchStatus}
+        searchStatus = input()
 
-            sendJson(client,filter)
+        filter = {'author': searchAuth, 'date': convertDateJson(searchDate), 'status': searchStatus}
 
-            searchResult = client.recv(1024)
+        sendJson(client, filter)
 
-            print(searchResult.decode())
+        searchResult = client.recv(1024)
 
-        elif (chosenOption == 'EDIT'):
+        print(searchResult.decode())
 
-            print(messages.OPT_EDIT_TICK)
+    elif (chosenOption == 'EDIT'):
 
-        elif (chosenOption == 'FILTER'):
+        print(messages.OPT_EDIT_TICK)
 
-            print(messages.OPT_FILTER_TICK)
+    elif (chosenOption == 'FILTER'):
 
-        elif (chosenOption == 'EXIT'):
+        print(messages.OPT_FILTER_TICK)
 
-            print(messages.OPT_EXIT)
+    elif (chosenOption == 'EXIT'):
 
-            break
+        print(messages.OPT_EXIT)
 
-        else:
-            print(messages.OPT_WRONG)
+
+
+    else:
+        print(messages.OPT_WRONG)
 
     client.close()

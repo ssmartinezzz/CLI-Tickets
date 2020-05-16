@@ -5,27 +5,22 @@ import messages
 from dbFunctions import *
 
 
-
 def newClient(clientsocket, address):
     print(messages.SV_THREAD)
 
     print(messages.SV_CONNECTION, address)
 
     lock = threading.Lock()
-    while True:
 
-        client_opt = clientsocket.recv(1024)
+    client_opt = clientsocket.recv(1024)
 
-        if (client_opt.decode() == 'INSERT'):
+    if (client_opt.decode() == 'INSERT'):
+        addTicket(clientsocket, lock)
 
-             addTicket(clientsocket,lock)
+    if (client_opt.decode() == 'LIST'):
+        ticketSearch = listTicketsbyDateAuthOrStatus(clientsocket)
 
-        if (client_opt.decode() == 'LIST'):
-
-            ticketSearch  = listTicketsbyDateAuthOrStatus(clientsocket)
-
-            clientsocket.send(sendTicketToJson(ticketSearch).encode())
-
+        clientsocket.send(sendTicketToJson(ticketSearch).encode())
 
 
 if __name__ == "__main__":
@@ -58,4 +53,6 @@ if __name__ == "__main__":
 
         th.start()
 
-    c.close()
+        th.join()
+
+        c.close()
