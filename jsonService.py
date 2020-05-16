@@ -19,7 +19,7 @@ def recvJson(socket):
 
 def sendTicketToJson(data):
 
-    return json.dumps(dict (r) for r in data.ticketToJson())
+    return json.dumps({'Filtred tickets':[ticket.ticketToJson() for ticket in data]})
 
 
 
