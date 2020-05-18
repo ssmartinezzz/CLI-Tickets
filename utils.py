@@ -1,4 +1,5 @@
 import datetime
+import messages
 
 
 def formatDate(date):
@@ -6,6 +7,24 @@ def formatDate(date):
         pass
     else:
         return datetime.datetime.strptime(date, "%d/%m/%Y")
+
+
+
+def idValidator(id):
+    try:
+        int(id)
+        return True
+    except ValueError:
+        return False
+
+def checkstatus(status):
+    if ((status == "pending") |(status == "in process") |(status == "solved")):
+
+        pass
+
+    else:
+
+        print(messages.ERR_MSG_STATUS)
 
 
 

@@ -8,8 +8,19 @@ def sendJson(socket,data):
 
 
 def convertDateJson(o):
+
     if isinstance(o, datetime.datetime):
+
         return o.__str__()
+
+"""def decodeJsonIntoInt(o):
+
+    if isinstance(o,str):
+        try:
+            return
+            """
+
+
 
 
 def recvJson(socket):
@@ -18,9 +29,12 @@ def recvJson(socket):
 
     return json.loads(recv_data, encoding="utf-8")
 
-def sendTicketToJson(data):
+def sendTicketsToJson(data):
 
     return json.dumps({'Filtred tickets':[ticket.ticketToJson() for ticket in data]},indent=4)
 
+def dumpTicket(ticket):
+
+    return json.dumps(ticket , indent= 4)
 
 

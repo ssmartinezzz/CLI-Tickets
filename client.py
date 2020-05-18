@@ -86,11 +86,19 @@ if __name__ == "__main__":
 
     elif (chosenOption == 'EDIT'):
 
-        print(messages.OPT_EDIT_TICK)
+        print(messages.OPT_EDIT_TICK,messages.ADD_TICKETID)
 
-    elif (chosenOption == 'FILTER'):
+        ticketId = input()
 
-        print(messages.OPT_FILTER_TICK)
+        if (idValidator(ticketId) == True):
+
+            client.send(ticketId.encode())
+
+            print(client.recv(1024).decode())
+
+        else:
+            print(messages.ERR_MSG_INPUT)
+
 
     elif (chosenOption == 'EXIT'):
 

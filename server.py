@@ -17,10 +17,37 @@ def newClient(clientsocket, address):
     if (client_opt.decode() == 'INSERT'):
         addTicket(clientsocket, lock)
 
-    if (client_opt.decode() == 'LIST'):
+    elif (client_opt.decode() == 'LIST'):
         ticketSearch = listTicketsbyDateAuthOrStatus(clientsocket)
 
-        clientsocket.send(sendTicketToJson(ticketSearch).encode())
+        clientsocket.send(sendTicketsToJson(ticketSearch).encode())
+
+    elif (client_opt.decode() == 'EDIT'):
+
+        ticketexists = existsTicket(clientsocket.recv(1024))
+        if (ticketexists):
+
+            ticketFound = getTicketbyId(ticketexists)
+
+            clientsocket.send(messages.TCKT_FOUND.encode() + dumpTicket(ticketFound).encode())
+
+        else:
+
+            clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
