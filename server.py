@@ -2,6 +2,7 @@ import socket
 import threading
 import sys
 import messages
+from utils import  *
 from dbFunctions import *
 
 
@@ -10,6 +11,8 @@ def newClient(clientsocket, address):
 
     print(messages.SV_CONNECTION, address)
 
+
+
     lock = threading.Lock()
 
     client_opt = clientsocket.recv(1024)
@@ -17,12 +20,19 @@ def newClient(clientsocket, address):
     if (client_opt.decode() == 'INSERT'):
         addTicket(clientsocket, lock)
 
+        generateHistory(address,client_opt.decode())
+
+
     elif (client_opt.decode() == 'LIST'):
         ticketSearch = listTicketsbyDateAuthOrStatus(clientsocket)
 
         clientsocket.send(sendTicketsToJson(ticketSearch).encode())
 
+        generateHistory(address, client_opt.decode())
+
     elif (client_opt.decode() == 'EDIT'):
+
+        generateHistory(address,client_opt.decode())
 
         ticketexists = existsTicket(clientsocket.recv(1024))
         if (ticketexists):

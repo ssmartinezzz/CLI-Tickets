@@ -26,6 +26,13 @@ def checkStatus(status):
 
         print(messages.ERR_MSG_STATUS)
 
+def generateHistory(address ,operation):
+    log = open('Historial.log', 'a')
+    log.write("\n")
+    log.write(f"\nThe client:{address} operation: {operation} Date:{datetime.datetime.now()}$")
+    log.close()
+
+
 
 
 
