@@ -102,6 +102,48 @@ def clientListCLI():
 
     return ticket
 
+def cliientEditCLI():
+
+    print(messages.OPT_EDIT_TICK)
+
+    chosedOPT = input("command: ")
+
+    parsedOPT = parse_args(chosedOPT)
+
+    (option, arg) = getopt.getopt(parsedOPT[0:], 'i:t:d:s:')
+
+    ticket = []
+    for (op, ar) in option:
+        if op == '-i':
+
+            id = ar
+
+            ticket.append(id)
+
+        elif op == '-t':
+            title = ar
+
+            ticket.append(title)
+
+        elif op == '-s':
+
+            status = str(ar)
+
+            checkStatus(status)
+
+            ticket.append(status)
+        elif op == '-d':
+
+            description = str(ar)
+
+            ticket.append(description)
+
+
+    return ticket
+
+
+
+
 
 
 

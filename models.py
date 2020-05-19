@@ -12,6 +12,9 @@ class Ticket(Base):
     status = Column(String(20))
     date = Column(Date)
 
+    def __repr__(self):
+        return'<Ticket: %r %r %r %r %r %r  >' % (self.id, self.title, self.author, self.description, self.status, self.date)
+
     def __init__(self, title, author, description, status, date):
         self.title = title
         self.author = author

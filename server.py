@@ -27,9 +27,11 @@ def newClient(clientsocket, address):
         ticketexists = existsTicket(clientsocket.recv(1024))
         if (ticketexists):
 
-            ticketFound = getTicketbyId(ticketexists)
+           editTicket(ticketexists,clientsocket,lock)
 
-            clientsocket.send(messages.TCKT_FOUND.encode() + dumpTicket(ticketFound).encode())
+           editedTicket = getTicketbyId(ticketexists)
+
+           clientsocket.send(dumpTicket(editedTicket).encode())
 
         else:
 

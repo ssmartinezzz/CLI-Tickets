@@ -57,26 +57,28 @@ def getTicketbyId(id):
 
     ticket = session.query(Ticket).get(int(id))
 
+
     return ticket.ticketToJson()
 
 
 
 
-def editTicket(data,lock):
+def editTicket(id,socket,lock):
 
     lock.acquire()
+    ticketrcv = recvJson(socket)
 
-    ticketModeable = session.query(Ticket).get(int(data['id']))
+    ticketModeable = session.query(Ticket).get(int(id))
+    print(ticketModeable)
 
-    ticketModeable.title = data['title']
 
-    ticketModeable.author = data['author']
+    ticketModeable.title = ticketrcv['title']
 
-    ticketModeable.description = data['description']
+    ticketModeable.description = ticketrcv['description']
 
-    ticketModeable.status = data['status']
+    ticketModeable.status = ticketrcv['status']
 
-    ticketModeable.date = datetime.date.today()
+
 
     session.add(ticketModeable)
 

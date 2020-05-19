@@ -67,13 +67,15 @@ if __name__ == "__main__":
 
         client.send(destination.encode())
 
-        print(messages.OPT_EDIT_TICK)
+        ticketToedit = cliController.cliientEditCLI()
 
-        ticketId = input()
+        if (idValidator(ticketToedit[0]) == True):
 
-        if (idValidator(ticketId) == True):
+            client.send(ticketToedit[0].encode())
 
-            client.send(ticketId.encode())
+            edit = {'title':ticketToedit[1],'status':ticketToedit[2],'description':ticketToedit[3]}
+
+            sendJson(client,edit)
 
             print(client.recv(1024).decode())
 
