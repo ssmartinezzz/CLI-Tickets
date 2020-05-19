@@ -5,6 +5,7 @@ import getopt
 import messages
 from jsonService import *
 from utils import *
+import cliController
 
 if __name__ == "__main__":
 
@@ -34,49 +35,27 @@ if __name__ == "__main__":
 
     client.connect((host, port))
 
-    print(messages.CLIENT_MENU)
+    destination = cliController.mainClientCLI()
 
-    chosenOption = input('Option: ').upper()
+    if destination == ("INSERT"):
 
-    client.send(chosenOption.encode())
+        client.send(destination.encode())
 
-    if (chosenOption == 'INSERT'):
+        cliTick = cliController.clientAddCLI()
 
-        print(messages.OPT_ADD_TICK, messages.ADD_TITLE)
-
-        tTitle = input()
-
-        print(messages.ADD_AUTHOR)
-
-        tAuth = input()
-
-        print(messages.ADD_DESCRIPTION)
-
-        tDescr = input()
-
-        ticket = {'title': tTitle, 'author': tAuth, 'description': tDescr}
+        ticket = {'title': cliTick[0], 'author': cliTick[1], 'description': cliTick[2]}
 
         sendJson(client, ticket)
 
 
 
-    elif (chosenOption == 'LIST'):
+    elif destination == ("LIST"):
 
-        print(messages.OPT_LIST_TICK, messages.ADD_AUTHOR)
+        client.send(destination.encode())
 
-        searchAuth = input()
+        ticketSearch = cliController.clientListCLI()
 
-        print(messages.SRCH_DATE)
-
-        searchDate = input()
-
-        searchDate = formatDate(searchDate)
-
-        print(messages.SRCH_STATUS)
-
-        searchStatus = input()
-
-        filter = {'author': searchAuth, 'date': convertDateJson(searchDate), 'status': searchStatus}
+        filter = {'author': ticketSearch[0], 'date': convertDateJson(ticketSearch[1]), 'status': ticketSearch[2]}
 
         sendJson(client, filter)
 
@@ -84,9 +63,11 @@ if __name__ == "__main__":
 
         print(searchResult.decode())
 
-    elif (chosenOption == 'EDIT'):
+    elif destination == ("EDIT"):
 
-        print(messages.OPT_EDIT_TICK,messages.ADD_TICKETID)
+        client.send(destination.encode())
+
+        print(messages.OPT_EDIT_TICK)
 
         ticketId = input()
 
@@ -100,13 +81,11 @@ if __name__ == "__main__":
             print(messages.ERR_MSG_INPUT)
 
 
-    elif (chosenOption == 'EXIT'):
+    elif destination ==("EXIT"):
 
         print(messages.OPT_EXIT)
 
-
-
     else:
-        print(messages.OPT_WRONG)
+         print(messages.OPT_WRONG)
 
     client.close()

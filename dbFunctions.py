@@ -46,7 +46,7 @@ def listTicketsbyDateAuthOrStatus(socket):
     kwargs = recvJson(socket)
 
     return session.query(Ticket)  \
-        .filter((Ticket.author == kwargs['author'])|(Ticket.date == kwargs['date']) |(Ticket.status == kwargs['status']))
+        .filter((Ticket.author == kwargs['author']) and (Ticket.date == kwargs['date']) and (Ticket.status == kwargs['status']))
 
 
 

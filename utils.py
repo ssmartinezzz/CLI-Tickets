@@ -17,7 +17,7 @@ def idValidator(id):
     except ValueError:
         return False
 
-def checkstatus(status):
+def checkStatus(status):
     if ((status == "pending") |(status == "in process") |(status == "solved")):
 
         pass
