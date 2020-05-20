@@ -3,21 +3,25 @@ import messages
 
 
 def formatDate(date):
-    if (date == ""):
-        pass
-    else:
-        return datetime.datetime.strptime(date, "%d/%m/%Y")
+
+    return datetime.datetime.strptime(date, "%d/%m/%Y")
 
 
 
 def idValidator(id):
+
     try:
+
         int(id)
+
         return True
+
     except ValueError:
+
         return False
 
 def checkStatus(status):
+
     if ((status == "pending") |(status == "in process") |(status == "solved")):
 
         pass
@@ -26,10 +30,16 @@ def checkStatus(status):
 
         print(messages.ERR_MSG_STATUS)
 
+
+
 def generateHistory(address ,operation):
+
     log = open('Historial.log', 'a')
+
     log.write("\n")
+
     log.write(f"\nThe client:{address} operation: {operation} Date:{datetime.datetime.now()}$")
+
     log.close()
 
 

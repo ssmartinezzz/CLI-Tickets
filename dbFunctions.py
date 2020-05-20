@@ -11,17 +11,13 @@ from jsonService import *
 from models import Ticket
 
 
-def addTicket(socket,lock):
+def addTicket(data,lock):
 
     lock.acquire()
 
-    ticketrecv = recvJson(socket)
-
-    print(ticketrecv)
-
     datetoday = datetime.date.today()
 
-    ticket = Ticket.jsonToTicket(ticketrecv)
+    ticket = Ticket.jsonToTicket(data)
 
     ticket.date = datetoday
 
@@ -41,9 +37,9 @@ def addTicket(socket,lock):
 
     lock.release()
 
-def listTicketsbyDateAuthOrStatus(socket):
+def listTicketsbyDateAuthOrStatus(data):
 
-    kwargs = recvJson(socket)
+
 
     return session.query(Ticket)  \
         .filter((Ticket.author == kwargs['author']) and (Ticket.date == kwargs['date']) and (Ticket.status == kwargs['status']))
@@ -51,7 +47,10 @@ def listTicketsbyDateAuthOrStatus(socket):
 
 
 def existsTicket (id):
-    return session.query(exists().where(Ticket.id == id)).scalar()
+    if(session.query(exists().where(Ticket.id == id))):
+        return True
+    else:
+        return False
 
 def getTicketbyId(id):
 
@@ -63,20 +62,18 @@ def getTicketbyId(id):
 
 
 
-def editTicket(id,socket,lock):
+def editTicket(id,dataTicket,lock):
 
     lock.acquire()
-    ticketrcv = recvJson(socket)
-
     ticketModeable = session.query(Ticket).get(int(id))
     print(ticketModeable)
 
 
-    ticketModeable.title = ticketrcv['title']
+    ticketModeable.title = dataTicket['title']
 
-    ticketModeable.description = ticketrcv['description']
+    ticketModeable.description = dataTicket['description']
 
-    ticketModeable.status = ticketrcv['status']
+    ticketModeable.status = dataTicket['status']
 
 
 

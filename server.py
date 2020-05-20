@@ -11,20 +11,24 @@ def newClient(clientsocket, address):
 
     print(messages.SV_CONNECTION, address)
 
-
-
     lock = threading.Lock()
 
     client_opt = clientsocket.recv(1024)
 
     if (client_opt.decode() == 'INSERT'):
-        addTicket(clientsocket, lock)
+
+        ticketrecv = recvJson(clientsocket)
+
+        addTicket(ticketrecv, lock)
 
         generateHistory(address,client_opt.decode())
 
 
     elif (client_opt.decode() == 'LIST'):
-        ticketSearch = listTicketsbyDateAuthOrStatus(clientsocket)
+
+        ticketrcv = recvJson(clientsocket)
+
+        ticketSearch = listTicketsbyDateAuthOrStatus(ticketrcv)
 
         clientsocket.send(sendTicketsToJson(ticketSearch).encode())
 
@@ -34,12 +38,17 @@ def newClient(clientsocket, address):
 
         generateHistory(address,client_opt.decode())
 
-        ticketexists = existsTicket(clientsocket.recv(1024))
+        recievingId =clientsocket.recv(1024)
+
+        ticketexists = existsTicket(recievingId)
+
         if (ticketexists):
 
-           editTicket(ticketexists,clientsocket,lock)
+           containingTicket = recvJson(clientsocket)
 
-           editedTicket = getTicketbyId(ticketexists)
+           editTicket(recievingId,containingTicket,lock)
+
+           editedTicket = getTicketbyId(recievingId)
 
            clientsocket.send(dumpTicket(editedTicket).encode())
 

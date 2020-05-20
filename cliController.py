@@ -1,7 +1,7 @@
 import getopt
 
 import messages
-from parserUtilities import parse_args
+from parserUtilities import *
 from utils import formatDate, checkStatus
 
 
@@ -11,7 +11,7 @@ def mainClientCLI():
     choosedOption = input("Option ")
     parsedOption = parse_args(choosedOption)
 
-    (option, arg) = getopt.getopt(parsedOption[0:], 'ilexo', ["insert", "list", "edit", "export", "exit"])
+    (option, arg) = getopt.getopt(parsedOption[0:], 'i l e x o', ["insert", "list", "edit", "export", "exit"])
 
     destination = ('EXIT')
     for op, value in option:
@@ -43,7 +43,7 @@ def clientAddCLI():
 
     chosedOPT = input("command: ")
 
-    parsedOPT = parse_args(chosedOPT)
+    parsedOPT = parseSpaces(chosedOPT)
 
     (option, arg) = getopt.getopt(parsedOPT[0:], 't:a:d:')
 
@@ -72,9 +72,10 @@ def clientListCLI():
 
     chosedOPT = input("command: ")
 
-    parsedOPT = parse_args(chosedOPT)
+    parsedOPT = parseSpaces(chosedOPT)
 
     (option, arg) = getopt.getopt(parsedOPT[0:], 'a:d:s:')
+
 
     ticket =[]
     for (op, ar) in option:
@@ -86,7 +87,7 @@ def clientListCLI():
             ticket.append(author)
 
         elif op == '-d':
-            date = ar
+            date =ar
 
             searchDate = formatDate(date)
 
@@ -108,7 +109,7 @@ def cliientEditCLI():
 
     chosedOPT = input("command: ")
 
-    parsedOPT = parse_args(chosedOPT)
+    parsedOPT = parseSpaces(chosedOPT)
 
     (option, arg) = getopt.getopt(parsedOPT[0:], 'i:t:d:s:')
 
@@ -116,7 +117,8 @@ def cliientEditCLI():
     for (op, ar) in option:
         if op == '-i':
 
-            id = ar
+            id = int(ar)
+
 
             ticket.append(id)
 
