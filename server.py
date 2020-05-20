@@ -7,64 +7,73 @@ from dbFunctions import *
 
 
 def newClient(clientsocket, address):
+
     print(messages.SV_THREAD)
 
     print(messages.SV_CONNECTION, address)
-
+    ip, host = clientsocket.getpeername()
     lock = threading.Lock()
 
     client_opt = clientsocket.recv(1024)
 
-    if (client_opt.decode() == 'INSERT'):
+    while True:
 
-        ticketrecv = recvJson(clientsocket)
+        if (client_opt.decode() == 'INSERT'):
 
-        addTicket(ticketrecv, lock)
+            ticketrecv = clientsocket.recv(1024)
 
-        generateHistory(address,client_opt.decode())
+            decodedT = recvJson(ticketrecv.decode())
 
+            addTicket(decodedT,lock)
 
-    elif (client_opt.decode() == 'LIST'):
+            clientsocket.send(messages.TCKT_CREATED.encode())
 
-        ticketrcv = recvJson(clientsocket)
-
-        ticketSearch = listTicketsbyDateAuthOrStatus(ticketrcv)
-
-        clientsocket.send(sendTicketsToJson(ticketSearch).encode())
-
-        generateHistory(address, client_opt.decode())
-
-    elif (client_opt.decode() == 'EDIT'):
-
-        generateHistory(address,client_opt.decode())
-
-        recievingId =clientsocket.recv(1024)
-
-        ticketexists = existsTicket(recievingId)
-
-        if (ticketexists):
-
-           containingTicket = recvJson(clientsocket)
-
-           editTicket(recievingId,containingTicket,lock)
-
-           editedTicket = getTicketbyId(recievingId)
-
-           clientsocket.send(dumpTicket(editedTicket).encode())
-
-        else:
-
-            clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
+            generateHistory(ip, client_opt.decode())
 
 
+        elif (client_opt.decode() == 'LIST'):
+
+            ticketrcv = clientsocket.recv(1024)
+
+            decodedT = recvJson(ticketrcv.decode())
+
+            ticketSearch = listTicketsbyDateAuthOrStatus(decodedT)
+
+            clientsocket.send(sendTicketsToJson(ticketSearch).encode())
+
+            generateHistory(ip, client_opt.decode())
+
+        elif (client_opt.decode() == 'EDIT'):
+
+            generateHistory(ip, client_opt.decode())
+
+            recievingId = clientsocket.recv(1024)
+
+            ticketexists = existsTicket(recievingId)
+
+            if (ticketexists):
+
+                containingTicket = clientsocket.recv(1024)
+
+                decodedT = recvJson(containingTicket.decode())
+
+                editTicket(recievingId, decodedT , lock)
+
+                editedTicket = getTicketbyId(recievingId)
+
+                clientsocket.send(dumpTicket(editedTicket).encode())
+
+            else:
+
+                clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
+        elif(client_opt.decode() == 'EXIT'):
+
+            break
 
 
+    clientsocket.close()
 
-
-
-
-
-
+    print(messages.SCK_CLOSED,ip)
 
 
 
@@ -101,6 +110,6 @@ if __name__ == "__main__":
 
         th.start()
 
-        th.join()
 
-        c.close()
+
+

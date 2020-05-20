@@ -1,5 +1,6 @@
 import datetime
 import messages
+import os
 
 
 def formatDate(date):
@@ -41,6 +42,12 @@ def generateHistory(address ,operation):
     log.write(f"\nThe client:{address} operation: {operation} Date:{datetime.datetime.now()}$")
 
     log.close()
+
+def clearTerminal():
+
+    os.system('clear')
+
+
 
 
 

@@ -1,11 +1,12 @@
 import socket
 import sys
-import os
+from dbFunctions import *
 import getopt
 import messages
 from jsonService import *
 from utils import *
 import cliController
+
 
 if __name__ == "__main__":
 
@@ -35,61 +36,87 @@ if __name__ == "__main__":
 
     client.connect((host, port))
 
-    destination = cliController.mainClientCLI()
+    while True:
 
-    if destination == ("INSERT"):
+        destination = cliController.mainClientCLI()
 
-        client.send(destination.encode())
+        if destination == ("INSERT"):
+            clearTerminal()
 
-        cliTick = cliController.clientAddCLI()
+            client.send(destination.encode())
 
-        ticket = {'title': cliTick[0], 'author': cliTick[1], 'description': cliTick[2]}
+            cliTick = cliController.clientAddCLI()
 
-        sendJson(client, ticket)
+            ticket = {'title': cliTick[0], 'author': cliTick[1], 'description': cliTick[2]}
 
+            client.send(sendJson(ticket).encode())
 
-
-    elif destination == ("LIST"):
-
-        client.send(destination.encode())
-
-        ticketSearch = cliController.clientListCLI()
-
-        filter = {'author': ticketSearch[0], 'date': convertDateJson(ticketSearch[1]), 'status': ticketSearch[2]}
-
-        sendJson(client, filter)
+            print(client.recv(1024).decode())
 
 
-        searchResult = recvJson(client)
 
-        print(searchResult)
+        elif destination == ("LIST"):
+
+            clearTerminal()
+
+            client.send(destination.encode())
+
+            ticketSearch = cliController.clientListCLI()
+
+            filter = {'author': ticketSearch[0], 'date': convertDateJson(ticketSearch[1]), 'status': ticketSearch[2]}
+
+            client.send(sendJson(filter).encode())
+
+            searchResult = client.recv(2048)
+
+            print(recvJson(searchResult.decode()))
 
 
-    elif destination == ("EDIT"):
+        elif destination == ("EDIT"):
 
-        client.send(destination.encode())
+            clearTerminal()
 
-        ticketToedit = cliController.cliientEditCLI()
+            client.send(destination.encode())
 
-        if (idValidator(ticketToedit[0]) == True):
+            ticketToedit = cliController.cliientEditCLI()
 
-            client.send(str(ticketToedit[0]).encode())
+            if (idValidator(ticketToedit[0]) == True):
 
-            edit = {'title':ticketToedit[1],'status':ticketToedit[2],'description':ticketToedit[3]}
+                ticketexists = existsTicket(ticketToedit[0])
 
-            sendJson(client,edit)
+                if (ticketexists):
 
-            print(recvJson(client))
+                    client.send(str(ticketToedit[0]).encode())
+
+                    edit = {'title': ticketToedit[1], 'status': ticketToedit[2], 'description': ticketToedit[3]}
+
+                    client.send(sendJson(edit).encode())
+
+                    editedTicket = client.recv(1024)
+
+                    print(recvJson(editedTicket.decode()))
+
+                else:
+
+                    print(messages.ERR_MSG_NOAVAILABLE)
+
+
+
+            else:
+                print(messages.ERR_MSG_INPUT)
+
+
+        elif destination == ("EXIT"):
+            clearTerminal()
+            client.send(destination.encode())
+            break
 
         else:
-            print(messages.ERR_MSG_INPUT)
+            print(messages.OPT_WRONG)
 
-
-    elif destination ==("EXIT"):
-
-        print(messages.OPT_EXIT)
-
-    else:
-         print(messages.OPT_WRONG)
+    print(messages.OPT_EXIT)
 
     client.close()
+
+
+
