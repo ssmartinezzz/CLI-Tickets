@@ -43,6 +43,23 @@ def generateHistory(address ,operation):
 
     log.close()
 
+def printableTicket(d):
+   for key in d:
+       print("Id:",key['id'])
+
+       print("Title:",key['title'])
+
+       print("Author:",key['author'])
+
+       print("Date:",key['date'])
+
+       print("Description:",key['description'])
+
+       print("Status:",key['status'])
+
+
+
+
 def clearTerminal():
 
     os.system('clear')

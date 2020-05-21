@@ -13,6 +13,8 @@ def newClient(clientsocket, address):
     print(messages.SV_CONNECTION, address)
     ip, host = clientsocket.getpeername()
     lock = threading.Lock()
+    page = 1
+    pageSize = 6
 
     client_opt = clientsocket.recv(1024)
 
@@ -33,13 +35,17 @@ def newClient(clientsocket, address):
 
         elif (client_opt.decode() == 'LIST'):
 
+
             ticketrcv = clientsocket.recv(1024)
 
-            decodedT = recvJson(ticketrcv.decode())
+            decoded_ticket = recvJson(ticketrcv.decode())
 
-            ticketSearch = listTicketsbyDateAuthOrStatus(decodedT)
+
+            ticketSearch = listTicketsbyDateAuthOrStatus(decoded_ticket,page,pageSize)
+
 
             clientsocket.send(sendTicketsToJson(ticketSearch).encode())
+
 
             generateHistory(ip, client_opt.decode())
 
