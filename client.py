@@ -62,17 +62,9 @@ if __name__ == "__main__":
             client.send(destination.encode())
 
             ticketSearch = cliController.clientListCLI()
+            print(ticketSearch)
+            
 
-
-            filter = {'author': ticketSearch[0], 'date': convertDateJson(ticketSearch[1]), 'status': ticketSearch[2]}
-
-            client.send(sendJson(filter).encode())
-
-            searchResult = client.recv(2048)
-
-            tickets_recived = recvJson(searchResult.decode())
-
-            print(tickets_recived)
 
 
 

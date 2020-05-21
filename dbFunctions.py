@@ -37,15 +37,10 @@ def addTicket(data,lock):
 
     lock.release()
 
-def listTicketsbyDateAuthOrStatus(data,page=0,page_size=None):
+def listTicketsbyDateAuthOrStatus():
 
-    query = session.query(Ticket).filter((Ticket.author == data['author']) | (Ticket.date == data['date']) |(Ticket.status == data['status']))
-    if page_size:
-        query = query.limit(page_size)
-    if page:
-        query = query.offset(page*page_size)
+    query= session.query(Ticket)
     return query
-
 
 
 def existsTicket (id):

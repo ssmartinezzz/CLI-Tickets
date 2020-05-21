@@ -3,6 +3,7 @@ import getopt
 import messages
 from parserUtilities import *
 from utils import formatDate, checkStatus
+from dbFunctions import *
 
 
 def mainClientCLI():
@@ -47,6 +48,7 @@ def clientAddCLI():
 
     (option, arg) = getopt.getopt(parsedOPT[0:], 't:a:d:')
 
+
     for (op, ar) in option:
 
         if op == '-t':
@@ -68,6 +70,7 @@ def clientAddCLI():
 
 def clientListCLI():
 
+
     print(messages.OPT_LIST_TICK)
 
     chosedOPT = input("command: ")
@@ -76,22 +79,32 @@ def clientListCLI():
 
     (option, arg) = getopt.getopt(parsedOPT[0:], 'a:d:s:')
 
+    tickets = listTicketsbyDateAuthOrStatus()
 
-    ticket =[]
+    filters_applied = []
+
+    ticket = {}
+
     for (op, ar) in option:
 
         if op == '-a':
 
             author= str(ar)
 
-            ticket.append(author)
+            present_author = "author"
+
+            filters_applied.append(present_author)
+            ticket['author'] = author
 
         elif op == '-d':
             date =ar
 
             searchDate = formatDate(date)
 
-            ticket.append(searchDate)
+            present_date = "date"
+
+            filters_applied.append(present_date)
+            ticket['date'] = searchDate
 
         elif op == '-s':
 
@@ -99,9 +112,29 @@ def clientListCLI():
 
             checkStatus(status)
 
-            ticket.append(status)
+            present_status = "status"
 
-    return ticket
+            filters_applied.append(present_status)
+
+            ticket['status'] = status
+
+
+    if ("author" in filters_applied):
+
+        tickets = tickets.filter( Ticket.author == ticket['author'])
+
+    elif("date"in filters_applied):
+
+       tickets = tickets.filter(Ticket.date == ticket['date'])
+
+    elif("status" in filters_applied):
+
+        tickets = tickets.filter(Ticket.status == ticket['status'])
+
+    result = session.execute(tickets)
+
+
+    return result.fetchall()
 
 def cliientEditCLI():
 

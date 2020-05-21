@@ -35,18 +35,6 @@ def newClient(clientsocket, address):
 
         elif (client_opt.decode() == 'LIST'):
 
-
-            ticketrcv = clientsocket.recv(1024)
-
-            decoded_ticket = recvJson(ticketrcv.decode())
-
-
-            ticketSearch = listTicketsbyDateAuthOrStatus(decoded_ticket,page,pageSize)
-
-
-            clientsocket.send(sendTicketsToJson(ticketSearch).encode())
-
-
             generateHistory(ip, client_opt.decode())
 
         elif (client_opt.decode() == 'EDIT'):
