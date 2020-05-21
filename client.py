@@ -40,6 +40,8 @@ if __name__ == "__main__":
 
         destination = cliController.mainClientCLI()
 
+
+
         if destination == ("INSERT"):
             clearTerminal()
 
@@ -55,15 +57,28 @@ if __name__ == "__main__":
 
 
 
-        elif destination == ("LIST"):
-
-            clearTerminal()
+        elif destination == ("LIST") :
 
             client.send(destination.encode())
 
-            ticketSearch = cliController.clientListCLI()
-            print(ticketSearch)
-            
+            filtersapplied,ticketData = cliController.clientListCLI()
+
+            filtersapplied = sendJson(filtersapplied)
+
+            ticketData = sendJson(ticketData)
+
+            client.send(filtersapplied.encode())
+
+            client.send(ticketData.encode())
+
+            ticket_search =client.recv(1024)
+
+            ticket_search = ticket_search.decode('utf-8')
+
+            print(ticket_search)
+
+
+
 
 
 

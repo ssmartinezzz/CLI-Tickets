@@ -27,7 +27,7 @@ commands available:\n
 """
 OPT_ADD_TICK = "Create a new ticket.subcommands: -t{Title} -a{Author} -d{Description}\n"
 
-OPT_LIST_TICK = "You've selected to list ticket/s. -f usage: -a{Author} -d{Date} -s{status}\n"
+OPT_LIST_TICK = "You've selected to list ticket/s.\n Press Enter to list all.\n Optional filter arguments usage: -a{Author} -d{Date} -s{status}\n"
 
 OPT_EDIT_TICK = "You've selected to edit a ticket. subcommands: -i{id} -t{Title} -s{status} -d{Description}\n"
 
@@ -46,3 +46,5 @@ ERR_MSG_NOAVAILABLE = "NOT FOUNDED RESOURCE"
 TCKT_FOUND = "TICKET FOUNDED TO MODIFY:"
 
 TCKT_CREATED ="Ticket succesfully created!"
+
+CLIENTS_NEWT_CREATED= "A new ticket was created"

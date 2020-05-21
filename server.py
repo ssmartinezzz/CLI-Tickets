@@ -4,6 +4,7 @@ import sys
 import messages
 from utils import  *
 from dbFunctions import *
+from filter import *
 
 
 def newClient(clientsocket, address):
@@ -33,7 +34,24 @@ def newClient(clientsocket, address):
             generateHistory(ip, client_opt.decode())
 
 
+
         elif (client_opt.decode() == 'LIST'):
+
+            client_filters  = clientsocket.recv(1024)
+
+            data_ticket = clientsocket.recv(1024)
+
+            client_filters = recvJson(client_filters.decode())
+
+            data_ticket = recvJson(data_ticket.decode())
+
+            result = filterAction(client_filters,data_ticket)
+
+            result = str(result).encode('utf-8')
+
+            clientsocket.send(result)
+            print("lo mande")
+
 
             generateHistory(ip, client_opt.decode())
 

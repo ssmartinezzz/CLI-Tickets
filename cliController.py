@@ -10,19 +10,24 @@ def mainClientCLI():
     print(messages.CLIENT_MENU)
 
     choosedOption = input("Option ")
-    parsedOption = parse_args(choosedOption)
+    parsedOption = parseSpaces(choosedOption)
 
     (option, arg) = getopt.getopt(parsedOption[0:], 'i l e x o', ["insert", "list", "edit", "export", "exit"])
 
     destination = ('EXIT')
+
     for op, value in option:
 
         if op in ('--insert', '-i') and value == '':
 
             destination = ('INSERT')
-        elif op in ('--list', '-l') and value == '':
+        elif op in ('--list', '-l') and value == 'F':
 
             destination = ('LIST')
+
+        elif op in ('--list','-l') and value == '':
+            destination= ('LIST')
+            expandable = False
         elif op in ('--edit', '-e') and value == '':
 
             destination =('EDIT')
@@ -79,7 +84,6 @@ def clientListCLI():
 
     (option, arg) = getopt.getopt(parsedOPT[0:], 'a:d:s:')
 
-    tickets = listTicketsbyDateAuthOrStatus()
 
     filters_applied = []
 
@@ -119,22 +123,17 @@ def clientListCLI():
             ticket['status'] = status
 
 
-    if ("author" in filters_applied):
-
-        tickets = tickets.filter( Ticket.author == ticket['author'])
-
-    elif("date"in filters_applied):
-
-       tickets = tickets.filter(Ticket.date == ticket['date'])
-
-    elif("status" in filters_applied):
-
-        tickets = tickets.filter(Ticket.status == ticket['status'])
-
-    result = session.execute(tickets)
+    return  filters_applied, ticket
 
 
-    return result.fetchall()
+
+def listAllTicketsCLI():
+
+    ticketsquery = listTicketsbyDateAuthOrStatus()
+
+    all_tickets = session.execute(ticketsquery)
+
+    return all_tickets.fetchall()
 
 def cliientEditCLI():
 
