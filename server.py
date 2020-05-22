@@ -40,17 +40,23 @@ def newClient(clientsocket, address):
             client_filters  = clientsocket.recv(1024)
 
             data_ticket = clientsocket.recv(1024)
+            client_filters = client_filters.decode()
+            try:
+                filters_decoded = json.loads(client_filters)
 
-            client_filters = recvJson(client_filters.decode())
+                data_ticket = recvJson(data_ticket.decode())
 
-            data_ticket = recvJson(data_ticket.decode())
+                result = filterAction(filters_decoded, data_ticket)
 
-            result = filterAction(client_filters,data_ticket)
+                result = str(result).encode('utf-8')
 
-            result = str(result).encode('utf-8')
+                clientsocket.send(result)
 
-            clientsocket.send(result)
-            print("lo mande")
+                print(messages.TCKTS_LISTED,ip)
+
+            except:
+
+                pass
 
 
             generateHistory(ip, client_opt.decode())
@@ -79,13 +85,13 @@ def newClient(clientsocket, address):
 
                 clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
         elif(client_opt.decode() == 'EXIT'):
-
+            print(messages.SCK_CLOSED, ip)
             break
 
 
     clientsocket.close()
 
-    print(messages.SCK_CLOSED,ip)
+
 
 
 

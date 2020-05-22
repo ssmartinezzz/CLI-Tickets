@@ -80,9 +80,10 @@ def clientListCLI():
 
     chosedOPT = input("command: ")
 
+
     parsedOPT = parseSpaces(chosedOPT)
 
-    (option, arg) = getopt.getopt(parsedOPT[0:], 'a:d:s:')
+    (option, arg) = getopt.getopt(parsedOPT[0:], 'p:a:d:s:v')
 
 
     filters_applied = []
@@ -91,7 +92,17 @@ def clientListCLI():
 
     for (op, ar) in option:
 
-        if op == '-a':
+
+        if op == '-p':
+            pagination = int(ar)
+
+            present_pagination = "pagination"
+
+            filters_applied.append(present_pagination)
+
+            ticket['pagination'] = pagination
+
+        elif op == '-a':
 
             author= str(ar)
 
@@ -121,6 +132,24 @@ def clientListCLI():
             filters_applied.append(present_status)
 
             ticket['status'] = status
+
+        elif op =='-v':
+            none_filters = str(ar)
+
+            without_filters ="without"
+
+            filters_applied.append(without_filters)
+
+            ticket['without'] = none_filters
+
+
+
+
+
+
+
+
+
 
 
     return  filters_applied, ticket

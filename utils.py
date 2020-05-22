@@ -5,7 +5,7 @@ import os
 
 def formatDate(date):
 
-    return datetime.datetime.strptime(date, "%d/%m/%Y")
+    return str(datetime.datetime.strptime(date, "%d/%m/%Y"))
 
 
 

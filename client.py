@@ -66,6 +66,7 @@ if __name__ == "__main__":
             filtersapplied = sendJson(filtersapplied)
 
             ticketData = sendJson(ticketData)
+            print(filtersapplied,ticketData)
 
             client.send(filtersapplied.encode())
 
