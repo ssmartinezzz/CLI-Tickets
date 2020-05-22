@@ -75,23 +75,19 @@ def clientAddCLI():
 
 def clientListCLI():
 
-
     print(messages.OPT_LIST_TICK)
 
     chosedOPT = input("command: ")
 
-
     parsedOPT = parseSpaces(chosedOPT)
 
     (option, arg) = getopt.getopt(parsedOPT[0:], 'p:a:d:s:v')
-
 
     filters_applied = []
 
     ticket = {}
 
     for (op, ar) in option:
-
 
         if op == '-p':
             pagination = int(ar)
@@ -142,27 +138,7 @@ def clientListCLI():
 
             ticket['without'] = none_filters
 
-
-
-
-
-
-
-
-
-
-
     return  filters_applied, ticket
-
-
-
-def listAllTicketsCLI():
-
-    ticketsquery = listTicketsbyDateAuthOrStatus()
-
-    all_tickets = session.execute(ticketsquery)
-
-    return all_tickets.fetchall()
 
 def cliientEditCLI():
 
@@ -203,6 +179,66 @@ def cliientEditCLI():
 
 
     return ticket
+
+def clientExportCLI():
+
+    print(messages.OPT_EXPORT_TICK)
+
+    chosedOPT = input("command: ")
+
+    parsedOPT = parseSpaces(chosedOPT)
+
+    (option, arg) = getopt.getopt(parsedOPT[0:], 'a:d:s:v')
+
+    filters_applied = []
+
+    ticket = {}
+    for (op, ar) in option:
+        if op == '-a':
+
+            author = str(ar)
+
+            present_author = "author"
+
+            filters_applied.append(present_author)
+
+            ticket['author'] = author
+
+
+        elif op == '-d':
+            date = ar
+
+            searchDate = formatDate(date)
+
+            present_date = "date"
+
+            filters_applied.append(present_date)
+            ticket['date'] = searchDate
+
+        elif op == '-s':
+
+            status = str(ar)
+
+            checkStatus(status)
+
+            present_status = "status"
+
+            filters_applied.append(present_status)
+
+            ticket['status'] = status
+
+        elif op == '-v':
+            none_filters = str(ar)
+
+            without_filters = "without"
+
+            filters_applied.append(without_filters)
+
+            ticket['without'] = none_filters
+
+
+    return filters_applied,ticket
+
 
 
 

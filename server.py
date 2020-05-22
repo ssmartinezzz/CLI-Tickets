@@ -1,3 +1,4 @@
+import multiprocessing
 import socket
 import threading
 import sys
@@ -5,6 +6,7 @@ import messages
 from utils import  *
 from dbFunctions import *
 from filter import *
+import csv
 
 
 def newClient(clientsocket, address):
@@ -12,15 +14,15 @@ def newClient(clientsocket, address):
     print(messages.SV_THREAD)
 
     print(messages.SV_CONNECTION, address)
-    ip, host = clientsocket.getpeername()
-    lock = threading.Lock()
-    page = 1
-    pageSize = 6
 
-    client_opt = clientsocket.recv(1024)
+    ip, host = clientsocket.getpeername()
+
+    lock = threading.Lock()
+
+
 
     while True:
-
+        client_opt = clientsocket.recv(1024)
         if (client_opt.decode() == 'INSERT'):
 
             ticketrecv = clientsocket.recv(1024)
@@ -40,7 +42,9 @@ def newClient(clientsocket, address):
             client_filters  = clientsocket.recv(1024)
 
             data_ticket = clientsocket.recv(1024)
+
             client_filters = client_filters.decode()
+
             try:
                 filters_decoded = json.loads(client_filters)
 
@@ -57,7 +61,6 @@ def newClient(clientsocket, address):
             except:
 
                 pass
-
 
             generateHistory(ip, client_opt.decode())
 
@@ -84,16 +87,52 @@ def newClient(clientsocket, address):
             else:
 
                 clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
+
+        elif(client_opt.decode() == 'EXPORT'):
+
+            paralell_p = multiprocessing.Process(target=exportTicket,args=(clientsocket,))
+
+            paralell_p.start()
+
         elif(client_opt.decode() == 'EXIT'):
             print(messages.SCK_CLOSED, ip)
+            break
+            
+        if not client_opt:
             break
 
 
     clientsocket.close()
 
 
+def exportTicket(socket):
 
+    print(messages.SV_PROCESS)
 
+    client_filters = socket.recv(1024)
+
+    data_ticket = socket.recv(1024)
+
+    client_filters = client_filters.decode()
+
+    try:
+        filters_decoded = json.loads(client_filters)
+
+        data_ticket = recvJson(data_ticket.decode())
+
+        tickets = filterExport(filters_decoded,data_ticket)
+
+        fd = open(tickets.csv,'a+')
+
+        outcsv = csv.writer(fd)
+
+        outcsv.writerows(x  for x in tickets)
+
+        fd.close()
+
+    except:
+
+        pass
 
 
 

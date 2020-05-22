@@ -5,6 +5,8 @@ SV_WAITING = "Server waiting for clients \n"
 
 SV_CONNECTION = ">>Server got connection from"
 
+SV_PROCESS = ">>Exporting a ticket.\n\n New process launched"
+
 SV_THREAD = "Initializing thread..\n"
 
 SCKT_ERROR = "Error while creating the socket. Stopping execution"
@@ -31,7 +33,7 @@ OPT_LIST_TICK = "You've selected to list ticket/s.\n -v to list all. Pagination 
 
 OPT_EDIT_TICK = "You've selected to edit a ticket. subcommands: -i{id} -t{Title} -s{status} -d{Description}\n"
 
-OPT_EXPORT_TICK = "You've selected to export ticket/s.\n"
+OPT_EXPORT_TICK = "You've selected to export ticket/s.\n -v to export all tickets \n"
 
 OPT_EXIT = ">>Shutting down the conection, bye!"
 

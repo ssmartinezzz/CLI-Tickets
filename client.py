@@ -78,13 +78,6 @@ if __name__ == "__main__":
 
             print(ticket_search)
 
-
-
-
-
-
-
-
         elif destination == ("EDIT"):
 
             clearTerminal()
@@ -117,6 +110,25 @@ if __name__ == "__main__":
 
             else:
                 print(messages.ERR_MSG_INPUT)
+
+        elif destination ==("EXPORT"):
+
+            clearTerminal()
+
+            filtersapplied, ticketData = cliController.clientExportCLI()
+
+            filtersapplied = sendJson(filtersapplied)
+
+            ticketData = sendJson(ticketData)
+            print(filtersapplied, ticketData)
+
+            client.send(filtersapplied.encode())
+
+            client.send(ticketData.encode())
+
+
+
+
 
 
         elif destination == ("EXIT"):
