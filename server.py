@@ -1,72 +1,138 @@
+import multiprocessing
 import socket
 import threading
 import sys
 import messages
 from utils import  *
 from dbFunctions import *
+from filter import *
+import csv
 
 
 def newClient(clientsocket, address):
+
     print(messages.SV_THREAD)
 
     print(messages.SV_CONNECTION, address)
 
+    ip, host = clientsocket.getpeername()
+
     lock = threading.Lock()
 
-    client_opt = clientsocket.recv(1024)
-
-    if (client_opt.decode() == 'INSERT'):
-
-        ticketrecv = recvJson(clientsocket)
-
-        addTicket(ticketrecv, lock)
-
-        generateHistory(address,client_opt.decode())
 
 
-    elif (client_opt.decode() == 'LIST'):
+    while True:
+        client_opt = clientsocket.recv(1024)
+        if (client_opt.decode() == 'INSERT'):
 
-        ticketrcv = recvJson(clientsocket)
+            ticketrecv = clientsocket.recv(1024)
 
-        ticketSearch = listTicketsbyDateAuthOrStatus(ticketrcv)
+            decodedT = recvJson(ticketrecv.decode())
 
-        clientsocket.send(sendTicketsToJson(ticketSearch).encode())
+            addTicket(decodedT,lock)
 
-        generateHistory(address, client_opt.decode())
+            clientsocket.send(messages.TCKT_CREATED.encode())
 
-    elif (client_opt.decode() == 'EDIT'):
-
-        generateHistory(address,client_opt.decode())
-
-        recievingId =clientsocket.recv(1024)
-
-        ticketexists = existsTicket(recievingId)
-
-        if (ticketexists):
-
-           containingTicket = recvJson(clientsocket)
-
-           editTicket(recievingId,containingTicket,lock)
-
-           editedTicket = getTicketbyId(recievingId)
-
-           clientsocket.send(dumpTicket(editedTicket).encode())
-
-        else:
-
-            clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
+            generateHistory(ip, client_opt.decode())
 
 
 
+        elif (client_opt.decode() == 'LIST'):
+
+            client_filters  = clientsocket.recv(1024)
+
+            data_ticket = clientsocket.recv(1024)
+
+            client_filters = client_filters.decode()
+
+            try:
+                filters_decoded = json.loads(client_filters)
+
+                data_ticket = recvJson(data_ticket.decode())
+
+                result = filterAction(filters_decoded, data_ticket)
+
+                result = str(result).encode('utf-8')
+
+                clientsocket.send(result)
+
+                print(messages.TCKTS_LISTED,ip)
+
+            except:
+
+                pass
+
+            generateHistory(ip, client_opt.decode())
+
+        elif (client_opt.decode() == 'EDIT'):
+
+            generateHistory(ip, client_opt.decode())
+
+            recievingId = clientsocket.recv(1024)
+
+            ticketexists = existsTicket(recievingId)
+
+            if (ticketexists):
+
+                containingTicket = clientsocket.recv(1024)
+
+                decodedT = recvJson(containingTicket.decode())
+
+                editTicket(recievingId, decodedT , lock)
+
+                editedTicket = getTicketbyId(recievingId)
+
+                clientsocket.send(dumpTicket(editedTicket).encode())
+
+            else:
+
+                clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
+
+        elif(client_opt.decode() == 'EXPORT'):
+
+            paralell_p = multiprocessing.Process(target=exportTicket,args=(clientsocket,))
+
+            paralell_p.start()
+
+        elif(client_opt.decode() == 'EXIT'):
+            print(messages.SCK_CLOSED, ip)
+            break
+            
+        if not client_opt:
+            break
 
 
+    clientsocket.close()
 
 
+def exportTicket(socket):
 
+    print(messages.SV_PROCESS)
 
+    client_filters = socket.recv(1024)
 
+    data_ticket = socket.recv(1024)
 
+    client_filters = client_filters.decode()
 
+    try:
+        filters_decoded = json.loads(client_filters)
+
+        data_ticket = recvJson(data_ticket.decode())
+
+        tickets = filterExport(filters_decoded,data_ticket)
+
+        fd = open(tickets.csv,'a+')
+
+        outcsv = csv.writer(fd)
+
+        outcsv.writerows(x  for x in tickets)
+
+        fd.close()
+
+    except:
+
+        pass
 
 
 
@@ -101,6 +167,6 @@ if __name__ == "__main__":
 
         th.start()
 
-        th.join()
 
-        c.close()
+
+

@@ -3,25 +3,31 @@ import getopt
 import messages
 from parserUtilities import *
 from utils import formatDate, checkStatus
+from dbFunctions import *
 
 
 def mainClientCLI():
     print(messages.CLIENT_MENU)
 
     choosedOption = input("Option ")
-    parsedOption = parse_args(choosedOption)
+    parsedOption = parseSpaces(choosedOption)
 
     (option, arg) = getopt.getopt(parsedOption[0:], 'i l e x o', ["insert", "list", "edit", "export", "exit"])
 
     destination = ('EXIT')
+
     for op, value in option:
 
         if op in ('--insert', '-i') and value == '':
 
             destination = ('INSERT')
-        elif op in ('--list', '-l') and value == '':
+        elif op in ('--list', '-l') and value == 'F':
 
             destination = ('LIST')
+
+        elif op in ('--list','-l') and value == '':
+            destination= ('LIST')
+            expandable = False
         elif op in ('--edit', '-e') and value == '':
 
             destination =('EDIT')
@@ -46,6 +52,7 @@ def clientAddCLI():
     parsedOPT = parseSpaces(chosedOPT)
 
     (option, arg) = getopt.getopt(parsedOPT[0:], 't:a:d:')
+
 
     for (op, ar) in option:
 
@@ -74,24 +81,41 @@ def clientListCLI():
 
     parsedOPT = parseSpaces(chosedOPT)
 
-    (option, arg) = getopt.getopt(parsedOPT[0:], 'a:d:s:')
+    (option, arg) = getopt.getopt(parsedOPT[0:], 'p:a:d:s:v')
 
+    filters_applied = []
 
-    ticket =[]
+    ticket = {}
+
     for (op, ar) in option:
 
-        if op == '-a':
+        if op == '-p':
+            pagination = int(ar)
+
+            present_pagination = "pagination"
+
+            filters_applied.append(present_pagination)
+
+            ticket['pagination'] = pagination
+
+        elif op == '-a':
 
             author= str(ar)
 
-            ticket.append(author)
+            present_author = "author"
+
+            filters_applied.append(present_author)
+            ticket['author'] = author
 
         elif op == '-d':
             date =ar
 
             searchDate = formatDate(date)
 
-            ticket.append(searchDate)
+            present_date = "date"
+
+            filters_applied.append(present_date)
+            ticket['date'] = searchDate
 
         elif op == '-s':
 
@@ -99,9 +123,22 @@ def clientListCLI():
 
             checkStatus(status)
 
-            ticket.append(status)
+            present_status = "status"
 
-    return ticket
+            filters_applied.append(present_status)
+
+            ticket['status'] = status
+
+        elif op =='-v':
+            none_filters = str(ar)
+
+            without_filters ="without"
+
+            filters_applied.append(without_filters)
+
+            ticket['without'] = none_filters
+
+    return  filters_applied, ticket
 
 def cliientEditCLI():
 
@@ -142,6 +179,66 @@ def cliientEditCLI():
 
 
     return ticket
+
+def clientExportCLI():
+
+    print(messages.OPT_EXPORT_TICK)
+
+    chosedOPT = input("command: ")
+
+    parsedOPT = parseSpaces(chosedOPT)
+
+    (option, arg) = getopt.getopt(parsedOPT[0:], 'a:d:s:v')
+
+    filters_applied = []
+
+    ticket = {}
+    for (op, ar) in option:
+        if op == '-a':
+
+            author = str(ar)
+
+            present_author = "author"
+
+            filters_applied.append(present_author)
+
+            ticket['author'] = author
+
+
+        elif op == '-d':
+            date = ar
+
+            searchDate = formatDate(date)
+
+            present_date = "date"
+
+            filters_applied.append(present_date)
+            ticket['date'] = searchDate
+
+        elif op == '-s':
+
+            status = str(ar)
+
+            checkStatus(status)
+
+            present_status = "status"
+
+            filters_applied.append(present_status)
+
+            ticket['status'] = status
+
+        elif op == '-v':
+            none_filters = str(ar)
+
+            without_filters = "without"
+
+            filters_applied.append(without_filters)
+
+            ticket['without'] = none_filters
+
+
+    return filters_applied,ticket
+
 
 
 

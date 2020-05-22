@@ -1,9 +1,9 @@
 import json
 import datetime
-def sendJson(socket,data):
+def sendJson(data):
 
-    json_data = json.dumps(data).encode()
-    socket.send(json_data)
+    return json.dumps(data)
+
 
 
 
@@ -15,11 +15,9 @@ def convertDateJson(o):
 
 
 
-def recvJson(socket):
+def recvJson(recv_data):
 
-    recv_data = socket.recv(1024)
-
-    return json.loads(recv_data, encoding="utf-8")
+    return json.loads(recv_data)
 
 def sendTicketsToJson(data):
 

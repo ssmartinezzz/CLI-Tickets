@@ -1,10 +1,11 @@
 import datetime
 import messages
+import os
 
 
 def formatDate(date):
 
-    return datetime.datetime.strptime(date, "%d/%m/%Y")
+    return str(datetime.datetime.strptime(date, "%d/%m/%Y"))
 
 
 
@@ -41,6 +42,29 @@ def generateHistory(address ,operation):
     log.write(f"\nThe client:{address} operation: {operation} Date:{datetime.datetime.now()}$")
 
     log.close()
+
+def printableTicket(d):
+   for key in d:
+       print("Id:",key['id'])
+
+       print("Title:",key['title'])
+
+       print("Author:",key['author'])
+
+       print("Date:",key['date'])
+
+       print("Description:",key['description'])
+
+       print("Status:",key['status'])
+
+
+
+
+def clearTerminal():
+
+    os.system('clear')
+
+
 
 
 

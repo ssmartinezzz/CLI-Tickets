@@ -37,13 +37,10 @@ def addTicket(data,lock):
 
     lock.release()
 
-def listTicketsbyDateAuthOrStatus(data):
+def listTicketsbyDateAuthOrStatus():
 
-
-
-    return session.query(Ticket)  \
-        .filter((Ticket.author == kwargs['author']) and (Ticket.date == kwargs['date']) and (Ticket.status == kwargs['status']))
-
+    query= session.query(Ticket)
+    return query
 
 
 def existsTicket (id):
