@@ -21,7 +21,7 @@ def recvJson(recv_data):
 
 def sendTicketsToJson(data):
 
-    return json.dumps({'Filtred tickets':[ticket.ticketToJson() for ticket in data]},indent=4)
+    return json.dumps({ticket.ticketToJson() for ticket in data},indent=4)
 
 def dumpTicket(ticket):
 

@@ -66,17 +66,30 @@ if __name__ == "__main__":
             filtersapplied = sendJson(filtersapplied)
 
             ticketData = sendJson(ticketData)
-            print(filtersapplied,ticketData)
 
             client.send(filtersapplied.encode())
 
             client.send(ticketData.encode())
 
-            ticket_search =client.recv(1024)
+            ticket_search = client.recv(1024)
 
-            ticket_search = ticket_search.decode('utf-8')
+            ticket_search = ticket_search.decode()
 
-            print(ticket_search)
+            list_tickets = eval(ticket_search)
+
+            for ticket in list_tickets:
+                print("Ticket Id: ",ticket['id'],"\n",
+                      "Title: ", ticket['title'], "\n",
+                      "Author: ", ticket['author'], "\n",
+                      "Date: ", ticket['date'], "\n",
+                      "Description: ", ticket['description'], "\n",
+                      "Status: ", ticket['status'], "\n\n",
+                      )
+
+
+
+
+
 
         elif destination == ("EDIT"):
 
