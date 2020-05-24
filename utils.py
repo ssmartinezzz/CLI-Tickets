@@ -32,6 +32,19 @@ def checkStatus(status):
 
         print(messages.ERR_MSG_STATUS)
 
+def generateCSV(tickets):
+    with open('tickets.csv', 'w', newline='') as f_handle:
+        writer = csv.writer(f_handle)
+        titles = ["Id", "Title", "Author", "Date", "Description", "Status"]
+        writer.writerow(titles)
+        for ticket in tickets:
+            writer.writerow((ticket['id'],
+                             ticket['title'],
+                             ticket['author'],
+                             ticket['date'],
+                             ticket['description'],
+                             ticket['status']))
+        f_handle.close()
 
 
 def generateHistory(address ,operation):

@@ -6,6 +6,31 @@ import messages
 from jsonService import *
 from utils import *
 import cliController
+import multiprocessing
+
+
+def exportTickets(socket,filtersapplied,ticketData):
+    socket.send(destination.encode())
+
+    socket.send(filtersapplied.encode())
+
+    socket.send(ticketData.encode())
+
+    ticket_search = client.recv(1024)
+
+    ticket_search = ticket_search.decode()
+
+    list_tickets = eval(ticket_search)
+
+    generateCSV(list_tickets)
+
+    print(messages.CLIENT_EXPORT_SUCCESS)
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
@@ -118,20 +143,24 @@ if __name__ == "__main__":
 
         elif destination ==("EXPORT"):
 
-            clearTerminal()
-
             client.send(destination.encode())
 
-            filtersapplied, ticketData = cliController.clientExportCLI()
+            clearTerminal()
+
+            filtersapplied, ticketData = cliController.clientListCLI()
 
             filtersapplied = sendJson(filtersapplied)
 
             ticketData = sendJson(ticketData)
-            print(filtersapplied, ticketData)
 
-            client.send(filtersapplied.encode())
+            paralell_p = multiprocessing.Process(target=exportTickets, args=(client,filtersapplied,ticketData,))
 
-            client.send(ticketData.encode())
+            paralell_p.start()
+
+
+
+
+
 
 
         elif destination == ("EXIT"):
@@ -145,6 +174,8 @@ if __name__ == "__main__":
     print(messages.OPT_EXIT)
 
     client.close()
+
+
 
 
 
