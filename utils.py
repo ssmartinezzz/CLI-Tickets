@@ -1,6 +1,7 @@
 import datetime
 import messages
 import os
+import csv
 
 
 def formatDate(date):
@@ -45,17 +46,19 @@ def generateHistory(address ,operation):
 
 def printableTicket(d):
    for key in d:
-       print("Id:",key['id'])
+       print("Id:",key['id'],"\n",
 
-       print("Title:",key['title'])
+       "Title:",key['title'],"\n",
 
-       print("Author:",key['author'])
+       "Author:",key['author'],"\n",
 
-       print("Date:",key['date'])
+       "Date:",key['date'],"\n",
 
-       print("Description:",key['description'])
+       "Description:",key['description'],"\n",
 
-       print("Status:",key['status'])
+       "Status:",key['status'],"\n",
+             "-------------------------------------")
+
 
 
 

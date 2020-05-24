@@ -58,8 +58,12 @@ def filterExport(filters,values):
 
         elif ("status" in filters):
 
-            tickets = tickets.filter(Ticket.status == values['status']
-                                     )
-    result = session.execute(tickets).fetchall()
+            tickets = tickets.filter(Ticket.status == values['status'])
 
-    return  result
+    result = tickets.all()
+    list_t = list()
+
+    for ticket in result:
+        list_t.append(ticket.ticketToJson())
+
+    return  list_t

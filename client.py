@@ -77,15 +77,7 @@ if __name__ == "__main__":
 
             list_tickets = eval(ticket_search)
 
-            for ticket in list_tickets:
-                print("Ticket Id: ",ticket['id'],"\n",
-                      "Title: ", ticket['title'], "\n",
-                      "Author: ", ticket['author'], "\n",
-                      "Date: ", ticket['date'], "\n",
-                      "Description: ", ticket['description'], "\n",
-                      "Status: ", ticket['status'], "\n\n",
-                      )
-
+            printableTicket(list_tickets)
 
 
 
@@ -128,6 +120,8 @@ if __name__ == "__main__":
 
             clearTerminal()
 
+            client.send(destination.encode())
+
             filtersapplied, ticketData = cliController.clientExportCLI()
 
             filtersapplied = sendJson(filtersapplied)
@@ -138,10 +132,6 @@ if __name__ == "__main__":
             client.send(filtersapplied.encode())
 
             client.send(ticketData.encode())
-
-
-
-
 
 
         elif destination == ("EXIT"):

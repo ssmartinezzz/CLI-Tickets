@@ -90,9 +90,17 @@ def newClient(clientsocket, address):
 
         elif(client_opt.decode() == 'EXPORT'):
 
-            paralell_p = multiprocessing.Process(target=exportTicket,args=(clientsocket,))
+            client_filters = clientsocket.recv(1024)
+
+            data_ticket = clientsocket.recv(1024)
+
+            client_filters = client_filters.decode()
+
+            paralell_p = multiprocessing.Process(target=exportTicket,args=(clientsocket,data_ticket,client_filters,))
 
             paralell_p.start()
+
+            generateHistory(ip, client_opt.decode())
 
         elif(client_opt.decode() == 'EXIT'):
             print(messages.SCK_CLOSED, ip)
@@ -105,30 +113,23 @@ def newClient(clientsocket, address):
     clientsocket.close()
 
 
-def exportTicket(socket):
+def exportTicket(socket,dataticket,clientfilters):
 
     print(messages.SV_PROCESS)
 
-    client_filters = socket.recv(1024)
-
-    data_ticket = socket.recv(1024)
-
-    client_filters = client_filters.decode()
-
     try:
-        filters_decoded = json.loads(client_filters)
 
-        data_ticket = recvJson(data_ticket.decode())
+        tickets = filterExport(clientfilters,dataticket)
 
-        tickets = filterExport(filters_decoded,data_ticket)
-
-        fd = open(tickets.csv,'a+')
-
-        outcsv = csv.writer(fd)
-
-        outcsv.writerows(x  for x in tickets)
+        fd = open("tickets.csv", "w", newline="")
+        header = ['id', 'title', 'author', 'date', 'description', 'status']
+        fd.write(header)
+        for row in tickets:
+            fd.write(row)
 
         fd.close()
+
+
 
     except:
 
