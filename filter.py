@@ -29,12 +29,15 @@ def filterAction(filters,values):
         elif not "pagination" in filters:
             tickets = tickets.slice(1 * 6, (1 * 6) + 6)
 
+    array = list()
 
 
+    result = tickets.all()
 
-    result = session.execute(tickets).fetchall()
+    for ticket in result:
+        array.append(ticket.ticketToJson())
 
-    return result
+    return array
 
 def filterExport(filters,values):
 

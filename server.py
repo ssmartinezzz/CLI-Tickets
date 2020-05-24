@@ -52,9 +52,9 @@ def newClient(clientsocket, address):
 
                 result = filterAction(filters_decoded, data_ticket)
 
-                result = str(result).encode('utf-8')
+                result = str(result)
 
-                clientsocket.send(result)
+                clientsocket.send(result.encode())
 
                 print(messages.TCKTS_LISTED,ip)
 
