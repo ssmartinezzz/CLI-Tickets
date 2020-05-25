@@ -1,6 +1,7 @@
 import datetime
 import messages
 import os
+import csv
 
 
 def formatDate(date):
@@ -31,6 +32,19 @@ def checkStatus(status):
 
         print(messages.ERR_MSG_STATUS)
 
+def generateCSV(tickets):
+    with open('tickets.csv', 'w', newline='') as f_handle:
+        writer = csv.writer(f_handle)
+        titles = ["Id", "Title", "Author", "Date", "Description", "Status"]
+        writer.writerow(titles)
+        for ticket in tickets:
+            writer.writerow((ticket['id'],
+                             ticket['title'],
+                             ticket['author'],
+                             ticket['date'],
+                             ticket['description'],
+                             ticket['status']))
+        f_handle.close()
 
 
 def generateHistory(address ,operation):
@@ -45,17 +59,19 @@ def generateHistory(address ,operation):
 
 def printableTicket(d):
    for key in d:
-       print("Id:",key['id'])
+       print("Id:",key['id'],"\n",
 
-       print("Title:",key['title'])
+       "Title:",key['title'],"\n",
 
-       print("Author:",key['author'])
+       "Author:",key['author'],"\n",
 
-       print("Date:",key['date'])
+       "Date:",key['date'],"\n",
 
-       print("Description:",key['description'])
+       "Description:",key['description'],"\n",
 
-       print("Status:",key['status'])
+       "Status:",key['status'],"\n",
+             "-------------------------------------")
+
 
 
 

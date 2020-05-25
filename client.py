@@ -1,11 +1,39 @@
 import socket
 import sys
+import time
+
 from dbFunctions import *
 import getopt
 import messages
 from jsonService import *
 from utils import *
 import cliController
+import multiprocessing
+
+
+def exportTickets(socket,filtersapplied,ticketData):
+
+
+
+    socket.send(filtersapplied.encode())
+
+    socket.send(ticketData.encode())
+
+    ticket_search = socket.recv(1024)
+
+    ticket_search = ticket_search.decode()
+
+    list_tickets = eval(ticket_search)
+
+    generateCSV(list_tickets)
+
+    print(messages.CLIENT_EXPORT_SUCCESS)
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
@@ -47,6 +75,8 @@ if __name__ == "__main__":
 
             client.send(destination.encode())
 
+            time.sleep(3)
+
             cliTick = cliController.clientAddCLI()
 
             ticket = {'title': cliTick[0], 'author': cliTick[1], 'description': cliTick[2]}
@@ -60,6 +90,8 @@ if __name__ == "__main__":
         elif destination == ("LIST") :
 
             client.send(destination.encode())
+
+            time.sleep(3)
 
             filtersapplied,ticketData = cliController.clientListCLI()
 
@@ -77,15 +109,7 @@ if __name__ == "__main__":
 
             list_tickets = eval(ticket_search)
 
-            for ticket in list_tickets:
-                print("Ticket Id: ",ticket['id'],"\n",
-                      "Title: ", ticket['title'], "\n",
-                      "Author: ", ticket['author'], "\n",
-                      "Date: ", ticket['date'], "\n",
-                      "Description: ", ticket['description'], "\n",
-                      "Status: ", ticket['status'], "\n\n",
-                      )
-
+            printableTicket(list_tickets)
 
 
 
@@ -96,6 +120,8 @@ if __name__ == "__main__":
             clearTerminal()
 
             client.send(destination.encode())
+
+            time.sleep(3)
 
             ticketToedit = cliController.cliientEditCLI()
 
@@ -126,18 +152,26 @@ if __name__ == "__main__":
 
         elif destination ==("EXPORT"):
 
+            client.send(destination.encode())
+
+            time.sleep(3)
+
             clearTerminal()
 
-            filtersapplied, ticketData = cliController.clientExportCLI()
+            filtersapplied, ticketData = cliController.clientListCLI()
 
             filtersapplied = sendJson(filtersapplied)
 
             ticketData = sendJson(ticketData)
-            print(filtersapplied, ticketData)
 
-            client.send(filtersapplied.encode())
+            paralell_p = multiprocessing.Process(target=exportTickets, args=(client,filtersapplied,ticketData,))
 
-            client.send(ticketData.encode())
+            paralell_p.start()
+
+            time.sleep(4)
+
+            paralell_p.join()
+
 
 
 
@@ -155,6 +189,8 @@ if __name__ == "__main__":
     print(messages.OPT_EXIT)
 
     client.close()
+
+
 
 
 

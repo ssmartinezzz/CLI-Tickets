@@ -1,4 +1,4 @@
-import multiprocessing
+
 import socket
 import threading
 import sys
@@ -6,7 +6,7 @@ import messages
 from utils import  *
 from dbFunctions import *
 from filter import *
-import csv
+
 
 
 def newClient(clientsocket, address):
@@ -90,9 +90,31 @@ def newClient(clientsocket, address):
 
         elif(client_opt.decode() == 'EXPORT'):
 
-            paralell_p = multiprocessing.Process(target=exportTicket,args=(clientsocket,))
+            client_filters = clientsocket.recv(1024)
 
-            paralell_p.start()
+            data_ticket = clientsocket.recv(1024)
+
+            client_filters = client_filters.decode()
+
+
+            try:
+                filters_decoded = json.loads(client_filters)
+
+                data_ticket = recvJson(data_ticket.decode())
+
+                result = filterAction(filters_decoded, data_ticket)
+
+                result = str(result)
+
+                clientsocket.send(result.encode())
+
+                print(messages.NEW_PROCESS, ip)
+
+            except:
+
+                pass
+
+            generateHistory(ip, client_opt.decode())
 
         elif(client_opt.decode() == 'EXIT'):
             print(messages.SCK_CLOSED, ip)
@@ -105,34 +127,14 @@ def newClient(clientsocket, address):
     clientsocket.close()
 
 
-def exportTicket(socket):
 
-    print(messages.SV_PROCESS)
 
-    client_filters = socket.recv(1024)
 
-    data_ticket = socket.recv(1024)
 
-    client_filters = client_filters.decode()
 
-    try:
-        filters_decoded = json.loads(client_filters)
 
-        data_ticket = recvJson(data_ticket.decode())
 
-        tickets = filterExport(filters_decoded,data_ticket)
 
-        fd = open(tickets.csv,'a+')
-
-        outcsv = csv.writer(fd)
-
-        outcsv.writerows(x  for x in tickets)
-
-        fd.close()
-
-    except:
-
-        pass
 
 
 

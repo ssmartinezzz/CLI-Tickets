@@ -5,7 +5,7 @@ SV_WAITING = "Server waiting for clients \n"
 
 SV_CONNECTION = ">>Server got connection from"
 
-SV_PROCESS = ">>Exporting a ticket.\n\n New process launched"
+NEW_PROCESS = ">>Exporting a ticket.\n\n"
 
 SV_THREAD = "Initializing thread..\n"
 
@@ -23,6 +23,8 @@ commands available:\n
             alternatives: -a(List all the tickets available) -f(allows to introduce filters) \n
             
 --edit / -e It allows to edit a ticket with ID \n
+
+--export / -x It allows to export tickets to a csv file
                         
             
 --exit      Disconnect the client
@@ -33,7 +35,7 @@ OPT_LIST_TICK = "You've selected to list ticket/s.\n -v to list all. Pagination 
 
 OPT_EDIT_TICK = "You've selected to edit a ticket. subcommands: -i{id} -t{Title} -s{status} -d{Description}\n"
 
-OPT_EXPORT_TICK = "You've selected to export ticket/s.\n -v to export all tickets \n"
+OPT_EXPORT_TICK = "You've selected to export ticket/s.\n -v to export all tickets \nOptional filter arguments usage: -a{Author} -d{Date} -s{status}\n"
 
 OPT_EXIT = ">>Shutting down the conection, bye!"
 
@@ -54,3 +56,5 @@ TCKT_CREATED ="Ticket succesfully created!"
 TCKTS_LISTED =">>Send: List of tickets to client: "
 
 CLIENTS_NEWT_CREATED= "A new ticket was created"
+
+CLIENT_EXPORT_SUCCESS= "Tickets exported in your directory"

@@ -39,27 +39,3 @@ def filterAction(filters,values):
 
     return array
 
-def filterExport(filters,values):
-
-    tickets = listTicketsbyDateAuthOrStatus()
-    if ("without" in filters):
-
-        tickets = tickets
-
-    else:
-
-        if ("author" in filters):
-
-            tickets = tickets.filter(Ticket.author == values['author'])
-
-        elif ("date" in filters):
-
-            tickets = tickets.filter(Ticket.date == values['date'])
-
-        elif ("status" in filters):
-
-            tickets = tickets.filter(Ticket.status == values['status']
-                                     )
-    result = session.execute(tickets).fetchall()
-
-    return  result
