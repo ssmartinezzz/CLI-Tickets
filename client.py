@@ -1,5 +1,7 @@
 import socket
 import sys
+import time
+
 from dbFunctions import *
 import getopt
 import messages
@@ -10,13 +12,14 @@ import multiprocessing
 
 
 def exportTickets(socket,filtersapplied,ticketData):
-    socket.send(destination.encode())
+
+
 
     socket.send(filtersapplied.encode())
 
     socket.send(ticketData.encode())
 
-    ticket_search = client.recv(1024)
+    ticket_search = socket.recv(1024)
 
     ticket_search = ticket_search.decode()
 
@@ -72,6 +75,8 @@ if __name__ == "__main__":
 
             client.send(destination.encode())
 
+            time.sleep(3)
+
             cliTick = cliController.clientAddCLI()
 
             ticket = {'title': cliTick[0], 'author': cliTick[1], 'description': cliTick[2]}
@@ -85,6 +90,8 @@ if __name__ == "__main__":
         elif destination == ("LIST") :
 
             client.send(destination.encode())
+
+            time.sleep(3)
 
             filtersapplied,ticketData = cliController.clientListCLI()
 
@@ -113,6 +120,8 @@ if __name__ == "__main__":
             clearTerminal()
 
             client.send(destination.encode())
+
+            time.sleep(3)
 
             ticketToedit = cliController.cliientEditCLI()
 
@@ -145,6 +154,8 @@ if __name__ == "__main__":
 
             client.send(destination.encode())
 
+            time.sleep(3)
+
             clearTerminal()
 
             filtersapplied, ticketData = cliController.clientListCLI()
@@ -156,6 +167,10 @@ if __name__ == "__main__":
             paralell_p = multiprocessing.Process(target=exportTickets, args=(client,filtersapplied,ticketData,))
 
             paralell_p.start()
+
+            time.sleep(4)
+
+            paralell_p.join()
 
 
 
