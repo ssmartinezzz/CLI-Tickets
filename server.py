@@ -2,6 +2,8 @@
 import socket
 import threading
 import sys
+import time
+
 import messages
 from utils import  *
 from dbFunctions import *
@@ -19,11 +21,13 @@ def newClient(clientsocket, address):
 
     lock = threading.Lock()
 
-
-
     while True:
+
         client_opt = clientsocket.recv(1024)
-        if (client_opt.decode() == 'INSERT'):
+
+        if client_opt.decode() == 'INSERT':
+
+            clientsocket.send(messages.OPT_ADD_TICK.encode())
 
             ticketrecv = clientsocket.recv(1024)
 
@@ -35,9 +39,9 @@ def newClient(clientsocket, address):
 
             generateHistory(ip, client_opt.decode())
 
+        elif client_opt.decode() == 'LIST':
 
-
-        elif (client_opt.decode() == 'LIST'):
+            clientsocket.send(messages.OPT_LIST_TICK.encode())
 
             client_filters  = clientsocket.recv(1024)
 
@@ -64,15 +68,15 @@ def newClient(clientsocket, address):
 
             generateHistory(ip, client_opt.decode())
 
-        elif (client_opt.decode() == 'EDIT'):
+        elif client_opt.decode() == 'EDIT':
 
-            generateHistory(ip, client_opt.decode())
+            clientsocket.send(messages.OPT_EDIT_TICK.encode())
 
             recievingId = clientsocket.recv(1024)
 
             ticketexists = existsTicket(recievingId)
 
-            if (ticketexists):
+            if ticketexists:
 
                 containingTicket = clientsocket.recv(1024)
 
@@ -84,11 +88,17 @@ def newClient(clientsocket, address):
 
                 clientsocket.send(dumpTicket(editedTicket).encode())
 
+                print(messages.TCKT_EDITED,ip)
+
             else:
 
                 clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
 
-        elif(client_opt.decode() == 'EXPORT'):
+            generateHistory(ip, client_opt.decode())
+
+        elif client_opt.decode() == 'EXPORT':
+
+            clientsocket.send(messages.OPT_EXPORT_TICK.encode())
 
             client_filters = clientsocket.recv(1024)
 
@@ -116,8 +126,14 @@ def newClient(clientsocket, address):
 
             generateHistory(ip, client_opt.decode())
 
-        elif(client_opt.decode() == 'EXIT'):
+        elif client_opt.decode() == 'CLEAR':
+
+            generateHistory(ip,client_opt.decode())
+
+        elif client_opt.decode() == 'EXIT':
+
             print(messages.SCK_CLOSED, ip)
+
             break
             
         if not client_opt:
@@ -125,16 +141,6 @@ def newClient(clientsocket, address):
 
 
     clientsocket.close()
-
-
-
-
-
-
-
-
-
-
 
 
 

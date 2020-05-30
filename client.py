@@ -13,8 +13,6 @@ import multiprocessing
 
 def exportTickets(socket,filtersapplied,ticketData):
 
-
-
     socket.send(filtersapplied.encode())
 
     socket.send(ticketData.encode())
@@ -28,12 +26,6 @@ def exportTickets(socket,filtersapplied,ticketData):
     generateCSV(list_tickets)
 
     print(messages.CLIENT_EXPORT_SUCCESS)
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
@@ -68,14 +60,13 @@ if __name__ == "__main__":
 
         destination = cliController.mainClientCLI()
 
+        if destination == "INSERT":
 
-
-        if destination == ("INSERT"):
             clearTerminal()
 
             client.send(destination.encode())
 
-            time.sleep(3)
+            print(client.recv(1024).decode())
 
             cliTick = cliController.clientAddCLI()
 
@@ -85,13 +76,13 @@ if __name__ == "__main__":
 
             print(client.recv(1024).decode())
 
-
-
-        elif destination == ("LIST") :
+        elif destination == "LIST":
 
             client.send(destination.encode())
 
-            time.sleep(3)
+            clearTerminal()
+
+            print(client.recv(1024).decode())
 
             filtersapplied,ticketData = cliController.clientListCLI()
 
@@ -111,25 +102,21 @@ if __name__ == "__main__":
 
             printableTicket(list_tickets)
 
-
-
-
-
-        elif destination == ("EDIT"):
+        elif destination == "EDIT":
 
             clearTerminal()
 
             client.send(destination.encode())
 
-            time.sleep(3)
+            print(client.recv(1024).decode())
 
             ticketToedit = cliController.cliientEditCLI()
 
-            if (idValidator(ticketToedit[0]) == True):
+            if idValidator(ticketToedit[0]) == True:
 
                 ticketexists = existsTicket(ticketToedit[0])
 
-                if (ticketexists):
+                if ticketexists:
 
                     client.send(str(ticketToedit[0]).encode())
 
@@ -145,18 +132,16 @@ if __name__ == "__main__":
 
                     print(messages.ERR_MSG_NOAVAILABLE)
 
-
-
             else:
                 print(messages.ERR_MSG_INPUT)
 
-        elif destination ==("EXPORT"):
+        elif destination == "EXPORT":
 
             client.send(destination.encode())
 
-            time.sleep(3)
-
             clearTerminal()
+
+            print(client.recv(1024).decode())
 
             filtersapplied, ticketData = cliController.clientListCLI()
 
@@ -168,20 +153,24 @@ if __name__ == "__main__":
 
             paralell_p.start()
 
-            time.sleep(4)
+            time.sleep(2)
 
             paralell_p.join()
 
+        elif destination == "CLEAR":
 
-
-
-
-
-
-        elif destination == ("EXIT"):
             clearTerminal()
+
             client.send(destination.encode())
+
+        elif destination == "EXIT":
+
+            clearTerminal()
+
+            client.send(destination.encode())
+
             break
+
 
         else:
             print(messages.OPT_WRONG)

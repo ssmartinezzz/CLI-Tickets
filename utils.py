@@ -73,9 +73,6 @@ def printableTicket(d):
              "-------------------------------------")
 
 
-
-
-
 def clearTerminal():
 
     os.system('clear')

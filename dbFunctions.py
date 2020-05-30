@@ -62,17 +62,14 @@ def getTicketbyId(id):
 def editTicket(id,dataTicket,lock):
 
     lock.acquire()
-    ticketModeable = session.query(Ticket).get(int(id))
-    print(ticketModeable)
 
+    ticketModeable = session.query(Ticket).get(int(id))
 
     ticketModeable.title = dataTicket['title']
 
     ticketModeable.description = dataTicket['description']
 
     ticketModeable.status = dataTicket['status']
-
-
 
     session.add(ticketModeable)
 

@@ -51,6 +51,8 @@ ERR_MSG_NO_DATA = "SERVER COULDN'T RECIEVE DATA FROM CLIENT"
 
 TCKT_FOUND = "TICKET FOUNDED TO MODIFY:"
 
+TCKT_EDITED = ">>Ticket Edited"
+
 TCKT_CREATED ="Ticket succesfully created!"
 
 TCKTS_LISTED =">>Send: List of tickets to client: "
