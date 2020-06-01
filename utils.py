@@ -44,6 +44,7 @@ def generateCSV(tickets):
                              ticket['author'],
                              ticket['date'],
                              ticket['description'],
+                             ticket['status'],
                              ))
 
 

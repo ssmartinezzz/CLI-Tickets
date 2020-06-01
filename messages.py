@@ -26,7 +26,7 @@ commands available:\n
 
 --export / -x It allows to export tickets to a csv file
                         
-            
+--clear / -c You can clear the terminal            
 --exit      Disconnect the client
 """
 OPT_ADD_TICK = "Create a new ticket.subcommands: -t{Title} -a{Author} -d{Description}\n"

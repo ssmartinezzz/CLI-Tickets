@@ -53,7 +53,7 @@ def clientAddCLI():
 
     ticket = []
 
-    time.sleep(2)
+    time.sleep(1)
 
     chosedOPT = input("command: ")
 
