@@ -76,7 +76,6 @@ if __name__ == "__main__":
 
             print(client.recv(1024).decode())
 
-
         elif destination == "LIST":
 
             client.send(destination.encode())
@@ -102,7 +101,6 @@ if __name__ == "__main__":
             list_tickets = eval(ticket_search)
 
             printableTicket(list_tickets)
-
 
         elif destination == "EDIT":
 
@@ -137,7 +135,6 @@ if __name__ == "__main__":
             else:
                 print(messages.ERR_MSG_INPUT)
 
-
         elif destination == "EXPORT":
 
             client.send(destination.encode())
@@ -165,7 +162,6 @@ if __name__ == "__main__":
             clearTerminal()
 
             client.send(destination.encode())
-
 
         elif destination == "EXIT":
 
