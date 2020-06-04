@@ -55,6 +55,10 @@ TCKT_EDITED = ">>Ticket Edited"
 
 TCKT_CREATED ="Ticket succesfully created!"
 
+TCKT_BRD_CRATED ="A new ticket has been creadted!"+" \r\n"
+
+TCKT_CURRENT_EDITING ="The ticket is being edited"
+
 TCKTS_LISTED =">>Send: List of tickets to client: "
 
 CLIENTS_NEWT_CREATED= "A new ticket was created"

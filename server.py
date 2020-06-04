@@ -1,9 +1,9 @@
 
 import socket
 import threading
-import sys
+import sys,os,signal
 import time
-
+from multiprocessing import Manager
 import messages
 from utils import  *
 from dbFunctions import *
@@ -11,7 +11,9 @@ from filter import *
 
 
 
-def newClient(clientsocket, address):
+def newClient(client,current_editing):
+
+    clientsocket, address = client
 
     print(messages.SV_THREAD)
 
@@ -24,6 +26,7 @@ def newClient(clientsocket, address):
     while True:
 
         client_opt = clientsocket.recv(1024)
+        msg = "Done"
 
         if client_opt.decode() == 'INSERT':
 
@@ -38,6 +41,8 @@ def newClient(clientsocket, address):
             clientsocket.send(messages.TCKT_CREATED.encode())
 
             generateHistory(ip, client_opt.decode())
+
+            """os.kill(os.getppid(),signal.SIGUSR1)"""
 
         elif client_opt.decode() == 'LIST':
 
@@ -78,21 +83,35 @@ def newClient(clientsocket, address):
 
             if ticketexists:
 
-                containingTicket = clientsocket.recv(1024)
+                time.sleep(3)
 
-                decodedT = recvJson(containingTicket.decode())
+                if recievingId not in current_editing:
 
-                editTicket(recievingId, decodedT , lock)
+                    current_editing.append(recievingId)
 
-                editedTicket = getTicketbyId(recievingId)
+                    containingTicket = clientsocket.recv(1024)
 
-                clientsocket.send(dumpTicket(editedTicket).encode())
+                    decodedT = recvJson(containingTicket.decode())
 
-                print(messages.TCKT_EDITED,ip)
+                    editTicket(recievingId, decodedT)
+
+                    editedTicket = getTicketbyId(recievingId)
+
+                    clientsocket.send(dumpTicket(editedTicket).encode())
+
+                    print(messages.TCKT_EDITED, ip)
+
+
+
+                elif recievingId in current_editing:
+
+                    clientsocket.send(messages.TCKT_CURRENT_EDITING+"\n"+str(recievingId))
 
             else:
 
                 clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
+
+            current_editing.remove(recievingId)
 
             generateHistory(ip, client_opt.decode())
 
@@ -139,14 +158,22 @@ def newClient(clientsocket, address):
         if not client_opt:
             break
 
-
+    """clientsocket.send(msg.encode("ascii"))"""
     clientsocket.close()
+
+def sendAsyn(s,f):
+
+    for sock,addr in socket_list:
+
+        sock.send(messages.TCKT_BRD_CRATED.encode("ascii"))
 
 
 
 
 if __name__ == "__main__":
+    socket_list = []
 
+    signal.signal(signal.SIGUSR1,sendAsyn)
     try:
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -168,10 +195,15 @@ if __name__ == "__main__":
 
     print(messages.SV_WAITING)
 
+    manager = Manager()
+    current_editing = manager.list()
     while True:
-        c, addr = s.accept()
 
-        th = threading.Thread(target=newClient, args=(c, addr))
+        client_data = s.accept()
+
+        socket_list.append(client_data)
+
+        th = threading.Thread(target=newClient, args=(client_data,current_editing ))
 
         th.start()
 

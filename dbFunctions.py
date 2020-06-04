@@ -59,9 +59,7 @@ def getTicketbyId(id):
 
 
 
-def editTicket(id,dataTicket,lock):
-
-    lock.acquire()
+def editTicket(id,dataTicket):
 
     ticketModeable = session.query(Ticket).get(int(id))
 
@@ -82,6 +80,4 @@ def editTicket(id,dataTicket,lock):
         session.rollback()
 
         print(e)
-
-    lock.release()
 
