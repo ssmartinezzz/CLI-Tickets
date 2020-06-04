@@ -11,7 +11,7 @@ from filter import *
 
 
 
-def newClient(clientsocket, address):
+def newClient(clientsocket, address,lock):
 
     print(messages.SV_THREAD)
 
@@ -19,7 +19,6 @@ def newClient(clientsocket, address):
 
     ip, host = clientsocket.getpeername()
 
-    lock = threading.Lock()
 
     while True:
 
@@ -31,9 +30,9 @@ def newClient(clientsocket, address):
 
             ticketrecv = clientsocket.recv(1024)
 
-            decodedT = recvJson(ticketrecv.decode())
+            decoded_t = recvJson(ticketrecv.decode())
 
-            addTicket(decodedT,lock)
+            addTicket(decoded_t,lock)
 
             clientsocket.send(messages.TCKT_CREATED.encode())
 
@@ -80,9 +79,9 @@ def newClient(clientsocket, address):
 
                 containingTicket = clientsocket.recv(1024)
 
-                decodedT = recvJson(containingTicket.decode())
+                decoded_t = recvJson(containingTicket.decode())
 
-                editTicket(recievingId, decodedT , lock)
+                editTicket(recievingId, decoded_t)
 
                 editedTicket = getTicketbyId(recievingId)
 
@@ -168,10 +167,12 @@ if __name__ == "__main__":
 
     print(messages.SV_WAITING)
 
+    lock = threading.Lock()
+    
     while True:
         c, addr = s.accept()
 
-        th = threading.Thread(target=newClient, args=(c, addr))
+        th = threading.Thread(target=newClient, args=(c, addr,lock,))
 
         th.start()
 
