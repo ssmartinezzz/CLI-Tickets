@@ -20,21 +20,18 @@ def filterAction(filters,values):
 
             tickets = tickets.filter(Ticket.author == values['author'])
 
-        elif "date" in filters:
+        if "date" in filters:
 
             tickets = tickets.filter(Ticket.date == values['date'])
 
-        elif "status" in filters:
+        if "status" in filters:
 
             tickets = tickets.filter(Ticket.status == values['status'])
 
-        elif "pagination" in filters:
-
-            tickets = tickets.slice((values['pagination'] * 6), ((values['pagination'] * 6) + 6))
-
-        elif not "pagination" in filters:
-
-            tickets = tickets.slice(0, 6)
+        pag = 0
+        if "pagination" in filters:
+            pag = values['pagination']
+        tickets = tickets.slice((pag * 6), ((pag* 6) + 6))
 
     array = list()
 
