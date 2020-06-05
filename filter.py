@@ -12,7 +12,7 @@ def filterAction(filters,values):
 
         else:
 
-            tickets = tickets.slice(1 * 6, (1 * 6) + 6)
+            tickets = tickets.slice(0 , 6)
 
     else:
 
@@ -32,9 +32,9 @@ def filterAction(filters,values):
 
             tickets = tickets.slice((values['pagination'] * 6), ((values['pagination'] * 6) + 6))
 
-        elif "pagination" not in filters:
+        elif not "pagination" in filters:
 
-            tickets = tickets.slice(1 * 6, (1 * 6) + 6)
+            tickets = tickets.slice(0, 6)
 
     array = list()
 

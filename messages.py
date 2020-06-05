@@ -22,7 +22,6 @@ commands available:\n
 --insert / -i It allows to create a new ticket. \n
            
 --list / -l It allows to list tickets \n
-            alternatives: -a(List all the tickets available) -f(allows to introduce filters) \n
             
 --edit / -e It allows to edit a ticket with ID \n
 
@@ -33,11 +32,15 @@ commands available:\n
 """
 OPT_ADD_TICK = "Create a new ticket.subcommands: -t{Title} -a{Author} -d{Description}\n"
 
-OPT_LIST_TICK = "You've selected to list ticket/s.\n -v to list all. Pagination aplicable with -p\n Optional filter arguments usage: -a{Author} -d{Date} -s{status} -p{pageN°}\n"
+OPT_LIST_TICK = "You've selected to list ticket/s.\n " \
+                "-v to list all. Pagination aplicable with -p" \
+                "\n Optional filter arguments usage: -a{Author} -d{Date} -s{status} -p{pageN°}\n"
 
 OPT_EDIT_TICK = "You've selected to edit a ticket. subcommands: -i{id} -t{Title} -s{status} -d{Description}\n"
 
-OPT_EXPORT_TICK = "You've selected to export ticket/s.\n -v to export all tickets \nOptional filter arguments usage: -a{Author} -d{Date} -s{status}\n"
+OPT_EXPORT_TICK = "You've selected to export ticket/s.\n -v to export all tickets " \
+                  "\nOptional filter arguments usage: -a{Author} -d{Date} -s{status}\n" \
+                  "Pagination aplicable with -p\n"
 
 OPT_EXIT = ">>Shutting down the conection, bye!"
 
