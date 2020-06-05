@@ -32,9 +32,7 @@ def filterAction(filters,values):
 
             tickets = tickets.slice((values['pagination'] * 6), ((values['pagination'] * 6) + 6))
 
-            print("Page doesn't exists!")
-
-        elif not "pagination" in filters:
+        elif "pagination" not in filters:
 
             tickets = tickets.slice(1 * 6, (1 * 6) + 6)
 
@@ -47,4 +45,56 @@ def filterAction(filters,values):
         array.append(ticket.ticketToJson())
 
     return array
+
+def editionFiltred(id,modifiers,dataTicket):
+
+    ticketModeable = session.query(Ticket).get(int(id))
+
+    local_attributes = []
+    local_attributes.append(ticketModeable.title)
+    local_attributes.append(ticketModeable.description)
+    local_attributes.append(ticketModeable.status)
+
+    print(local_attributes)
+
+    if "title" in modifiers and "description" in modifiers and "status" in modifiers:
+
+        local_attributes[0] = dataTicket['title']
+
+        local_attributes[1] = dataTicket['description']
+
+        local_attributes[2] = dataTicket['status']
+
+    elif "title" in modifiers and "description" in modifiers:
+
+        local_attributes[0] = dataTicket['title']
+
+        local_attributes[1] = dataTicket['description']
+
+    elif "title" in modifiers and "status" in modifiers:
+
+        local_attributes[0] = dataTicket['title']
+
+        local_attributes[2] = dataTicket['status']
+
+    elif "title" in modifiers:
+
+        local_attributes[0] = dataTicket['title']
+
+    elif "description" in modifiers and "status" in modifiers:
+
+        local_attributes[1] = dataTicket['description']
+
+        local_attributes[2] = dataTicket['status']
+
+    elif "description" in modifiers:
+
+        local_attributes[0] = dataTicket['description']
+
+    elif "status" in modifiers:
+
+        local_attributes[2] = dataTicket['status']
+
+    return local_attributes
+
 

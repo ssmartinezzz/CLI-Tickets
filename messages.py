@@ -5,6 +5,8 @@ SV_WAITING = "Server waiting for clients \n"
 
 SV_CONNECTION = ">>Server got connection from"
 
+SV_RECV_ID =">>Server recieved Id: "
+
 NEW_PROCESS = ">>Exporting a ticket.\n\n"
 
 SV_THREAD = "Initializing thread..\n"

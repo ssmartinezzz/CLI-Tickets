@@ -63,16 +63,15 @@ def getTicketbyId(id):
 
 
 
-def editTicket(id,dataTicket):
-
+def editTicket(id,params_applied):
 
     ticketModeable = session.query(Ticket).get(int(id))
 
-    ticketModeable.title = dataTicket['title']
+    ticketModeable.title = params_applied[0]
 
-    ticketModeable.description = dataTicket['description']
+    ticketModeable.description = params_applied[1]
 
-    ticketModeable.status = dataTicket['status']
+    ticketModeable.status = params_applied[2]
 
     session.add(ticketModeable)
 

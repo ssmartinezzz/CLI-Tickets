@@ -147,7 +147,7 @@ def clientListCLI():
 
             ticket['without'] = none_filters
 
-    return  filters_applied, ticket
+    return filters_applied, ticket
 
 def cliientEditCLI():
 
@@ -157,19 +157,28 @@ def cliientEditCLI():
 
     (option, arg) = getopt.getopt(parsedOPT[0:], 'i:t:d:s:')
 
-    ticket = []
+    modifiers = []
+
+    ticket = {}
     for (op, ar) in option:
         if op == '-i':
 
             id = int(ar)
 
+            present_id = "id"
 
-            ticket.append(id)
+            modifiers.append(present_id)
+
+            ticket['id'] = id
 
         elif op == '-t':
             title = ar
 
-            ticket.append(title)
+            present_title = "title"
+
+            modifiers.append(present_title)
+
+            ticket['title']=title
 
         elif op == '-s':
 
@@ -177,15 +186,22 @@ def cliientEditCLI():
 
             checkStatus(status)
 
-            ticket.append(status)
+            present_status ="status"
+
+            modifiers.append(present_status)
+
+            ticket['status'] = (status)
         elif op == '-d':
 
             description = str(ar)
 
-            ticket.append(description)
+            present_description = "description"
 
+            modifiers.append(present_description)
 
-    return ticket
+            ticket['description'] = description
+
+    return modifiers,ticket
 
 
 

@@ -110,19 +110,27 @@ if __name__ == "__main__":
 
             print(client.recv(1024).decode())
 
-            ticketToedit = cliController.cliientEditCLI()
+            modifiers, ticket_toedit = cliController.cliientEditCLI()
 
-            if idValidator(ticketToedit[0]) == True:
+            if idValidator(ticket_toedit['id']):
 
-                ticketexists = existsTicket(ticketToedit[0])
+                ticket_exists = existsTicket(ticket_toedit['id'])
 
-                if ticketexists:
+                if ticket_exists:
 
-                    client.send(str(ticketToedit[0]).encode())
+                    id = ticket_toedit['id']
 
-                    edit = {'title': ticketToedit[1], 'status': ticketToedit[2], 'description': ticketToedit[3]}
+                    modifiers = sendJson(modifiers)
 
-                    client.send(sendJson(edit).encode())
+                    ticket_toedit = sendJson(ticket_toedit)
+
+                    client.send(str(id).encode())
+
+                    print(client.recv(1024).decode("utf-8"))
+
+                    client.send(modifiers.encode())
+
+                    client.send(ticket_toedit.encode())
 
                     editedTicket = client.recv(1024)
 

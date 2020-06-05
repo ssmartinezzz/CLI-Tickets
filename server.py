@@ -42,7 +42,7 @@ def newClient(clientsocket, address,lock):
 
             clientsocket.send(messages.OPT_LIST_TICK.encode())
 
-            client_filters  = clientsocket.recv(1024)
+            client_filters = clientsocket.recv(1024)
 
             data_ticket = clientsocket.recv(1024)
 
@@ -73,21 +73,34 @@ def newClient(clientsocket, address,lock):
 
             recievingId = clientsocket.recv(1024)
 
-            ticketexists = existsTicket(recievingId)
+            recievingId = int(recievingId.decode())
+
+            clientsocket.send(messages.SV_RECV_ID.encode("utf-8"))
+
+            modifiers = clientsocket.recv(1024)
+
+            data_ticket = clientsocket.recv(1024)
+
+            ticketexists = existsTicket(id)
 
             if ticketexists:
 
-                containingTicket = clientsocket.recv(1024)
+                modifiers = modifiers.decode()
 
-                decoded_t = recvJson(containingTicket.decode())
+                modifiers_decoded = json.loads(modifiers)
 
-                editTicket(recievingId, decoded_t)
+                data_ticket = recvJson(data_ticket.decode())
 
-                editedTicket = getTicketbyId(recievingId)
+                params_applied = editionFiltred(recievingId,modifiers_decoded,data_ticket)
 
-                clientsocket.send(dumpTicket(editedTicket).encode())
+                editTicket(recievingId, params_applied)
 
-                print(messages.TCKT_EDITED,ip)
+                edited_ticket = getTicketbyId(recievingId)
+
+                clientsocket.send(dumpTicket(edited_ticket).encode())
+
+                print(messages.TCKT_EDITED, ip)
+
 
             else:
 
@@ -168,7 +181,7 @@ if __name__ == "__main__":
     print(messages.SV_WAITING)
 
     lock = threading.Lock()
-    
+
     while True:
         c, addr = s.accept()
 
