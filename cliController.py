@@ -1,51 +1,59 @@
 import getopt
-
+import time
 import messages
 from parserUtilities import *
 from utils import formatDate, checkStatus
-from dbFunctions import *
+
 
 
 def mainClientCLI():
     print(messages.CLIENT_MENU)
 
     choosedOption = input("Option ")
+
     parsedOption = parseSpaces(choosedOption)
 
-    (option, arg) = getopt.getopt(parsedOption[0:], 'i l e x o', ["insert", "list", "edit", "export", "exit"])
+    (option, arg) = getopt.getopt(parsedOption[0:], 'i l e x o c', ["insert", "list", "edit", "export", "exit","clear"])
 
     destination = ('EXIT')
 
     for op, value in option:
 
-        if op in ('--insert', '-i') and value == '':
+        if op in ('--insert', '-i'):
 
             destination = ('INSERT')
-        elif op in ('--list', '-l') and value == 'F':
+
+        elif op in ('--list', '-l'):
 
             destination = ('LIST')
 
-        elif op in ('--list','-l') and value == '':
+        elif op in ('--list','-l'):
+
             destination= ('LIST')
-            expandable = False
-        elif op in ('--edit', '-e') and value == '':
+
+        elif op in ('--edit', '-e'):
 
             destination =('EDIT')
 
-        elif op in ('--export', '-x') and value == '':
+        elif op in ('--export', '-x'):
 
             destination = ('EXPORT')
 
-        elif op in ('--exit','-o')and value =='':
+        elif op in ('--exit','-o'):
+
             destination = ('EXIT')
+
+        elif op in('--clear','-c' ) :
+
+            destination = ('CLEAR')
 
     return destination
 
 def clientAddCLI():
 
-    print(messages.OPT_ADD_TICK)
-
     ticket = []
+
+    time.sleep(1)
 
     chosedOPT = input("command: ")
 
@@ -75,13 +83,11 @@ def clientAddCLI():
 
 def clientListCLI():
 
-    print(messages.OPT_LIST_TICK)
+    chosed_opt = input("command:")
 
-    chosedOPT = input("command: ")
+    parsed_opt = parseSpaces(chosed_opt)
 
-    parsedOPT = parseSpaces(chosedOPT)
-
-    (option, arg) = getopt.getopt(parsedOPT[0:], 'p:a:d:s:v')
+    (option, arg) = getopt.getopt(parsed_opt[0:], 'p:a:d:s:v')
 
     filters_applied = []
 
@@ -105,16 +111,19 @@ def clientListCLI():
             present_author = "author"
 
             filters_applied.append(present_author)
+
             ticket['author'] = author
 
         elif op == '-d':
-            date =ar
+
+            date = ar
 
             searchDate = formatDate(date)
 
             present_date = "date"
 
             filters_applied.append(present_date)
+
             ticket['date'] = searchDate
 
         elif op == '-s':
@@ -138,12 +147,9 @@ def clientListCLI():
 
             ticket['without'] = none_filters
 
-    return  filters_applied, ticket
+    return filters_applied, ticket
 
 def cliientEditCLI():
-
-    print(messages.OPT_EDIT_TICK)
-    print(messages.OPT_EXPORT_TICK)
 
     chosedOPT = input("command: ")
 
@@ -151,19 +157,28 @@ def cliientEditCLI():
 
     (option, arg) = getopt.getopt(parsedOPT[0:], 'i:t:d:s:')
 
-    ticket = []
+    modifiers = []
+
+    ticket = {}
     for (op, ar) in option:
         if op == '-i':
 
             id = int(ar)
 
+            present_id = "id"
 
-            ticket.append(id)
+            modifiers.append(present_id)
+
+            ticket['id'] = id
 
         elif op == '-t':
             title = ar
 
-            ticket.append(title)
+            present_title = "title"
+
+            modifiers.append(present_title)
+
+            ticket['title']=title
 
         elif op == '-s':
 
@@ -171,15 +186,22 @@ def cliientEditCLI():
 
             checkStatus(status)
 
-            ticket.append(status)
+            present_status ="status"
+
+            modifiers.append(present_status)
+
+            ticket['status'] = (status)
         elif op == '-d':
 
             description = str(ar)
 
-            ticket.append(description)
+            present_description = "description"
 
+            modifiers.append(present_description)
 
-    return ticket
+            ticket['description'] = description
+
+    return modifiers,ticket
 
 
 

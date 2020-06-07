@@ -1,4 +1,5 @@
 import datetime
+import time
 
 from sqlalchemy import exists
 from sqlalchemy.exc import SQLAlchemyError
@@ -13,7 +14,7 @@ from models import Ticket
 
 def addTicket(data,lock):
 
-    lock.acquire()
+
 
     datetoday = datetime.date.today()
 
@@ -23,19 +24,22 @@ def addTicket(data,lock):
 
     ticket.status = "pending"
 
-    session.add(ticket)
+    with lock:
+        session.add(ticket)
 
-    try:
+        try:
 
-        session.commit()
+            session.commit()
 
-    except SQLAlchemyError as e:
+        except SQLAlchemyError as e:
 
-        session.rollback()
+            session.rollback()
 
-        print(e)
+            print(e)
 
-    lock.release()
+
+
+
 
 def listTicketsbyDateAuthOrStatus():
 
@@ -59,20 +63,15 @@ def getTicketbyId(id):
 
 
 
-def editTicket(id,dataTicket,lock):
+def editTicket(id,params_applied):
 
-    lock.acquire()
     ticketModeable = session.query(Ticket).get(int(id))
-    print(ticketModeable)
 
+    ticketModeable.title = params_applied[0]
 
-    ticketModeable.title = dataTicket['title']
+    ticketModeable.description = params_applied[1]
 
-    ticketModeable.description = dataTicket['description']
-
-    ticketModeable.status = dataTicket['status']
-
-
+    ticketModeable.status = params_applied[2]
 
     session.add(ticketModeable)
 
@@ -86,5 +85,4 @@ def editTicket(id,dataTicket,lock):
 
         print(e)
 
-    lock.release()
 

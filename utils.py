@@ -2,6 +2,7 @@ import datetime
 import messages
 import os
 import csv
+import gzip
 
 
 def formatDate(date):
@@ -33,8 +34,8 @@ def checkStatus(status):
         print(messages.ERR_MSG_STATUS)
 
 def generateCSV(tickets):
-    with open('tickets.csv', 'w', newline='') as f_handle:
-        writer = csv.writer(f_handle)
+    with gzip.open("tickets.csv.gz", "wt", newline="") as file:
+        writer = csv.writer(file)
         titles = ["Id", "Title", "Author", "Date", "Description", "Status"]
         writer.writerow(titles)
         for ticket in tickets:
@@ -43,8 +44,8 @@ def generateCSV(tickets):
                              ticket['author'],
                              ticket['date'],
                              ticket['description'],
-                             ticket['status']))
-        f_handle.close()
+                             ticket['status'],
+                             ))
 
 
 def generateHistory(address ,operation):
@@ -71,9 +72,6 @@ def printableTicket(d):
 
        "Status:",key['status'],"\n",
              "-------------------------------------")
-
-
-
 
 
 def clearTerminal():

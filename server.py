@@ -2,6 +2,8 @@
 import socket
 import threading
 import sys
+import time
+
 import messages
 from utils import  *
 from dbFunctions import *
@@ -9,7 +11,7 @@ from filter import *
 
 
 
-def newClient(clientsocket, address):
+def newClient(clientsocket, address,lock):
 
     print(messages.SV_THREAD)
 
@@ -17,29 +19,30 @@ def newClient(clientsocket, address):
 
     ip, host = clientsocket.getpeername()
 
-    lock = threading.Lock()
-
-
 
     while True:
+
         client_opt = clientsocket.recv(1024)
-        if (client_opt.decode() == 'INSERT'):
+
+        if client_opt.decode() == 'INSERT':
+
+            clientsocket.send(messages.OPT_ADD_TICK.encode())
 
             ticketrecv = clientsocket.recv(1024)
 
-            decodedT = recvJson(ticketrecv.decode())
+            decoded_t = recvJson(ticketrecv.decode())
 
-            addTicket(decodedT,lock)
+            addTicket(decoded_t,lock)
 
             clientsocket.send(messages.TCKT_CREATED.encode())
 
             generateHistory(ip, client_opt.decode())
 
+        elif client_opt.decode() == 'LIST':
 
+            clientsocket.send(messages.OPT_LIST_TICK.encode())
 
-        elif (client_opt.decode() == 'LIST'):
-
-            client_filters  = clientsocket.recv(1024)
+            client_filters = clientsocket.recv(1024)
 
             data_ticket = clientsocket.recv(1024)
 
@@ -64,31 +67,50 @@ def newClient(clientsocket, address):
 
             generateHistory(ip, client_opt.decode())
 
-        elif (client_opt.decode() == 'EDIT'):
+        elif client_opt.decode() == 'EDIT':
 
-            generateHistory(ip, client_opt.decode())
+            clientsocket.send(messages.OPT_EDIT_TICK.encode())
 
             recievingId = clientsocket.recv(1024)
 
-            ticketexists = existsTicket(recievingId)
+            recievingId = int(recievingId.decode())
 
-            if (ticketexists):
+            clientsocket.send(messages.SV_RECV_ID.encode("utf-8"))
 
-                containingTicket = clientsocket.recv(1024)
+            modifiers = clientsocket.recv(1024)
 
-                decodedT = recvJson(containingTicket.decode())
+            data_ticket = clientsocket.recv(1024)
 
-                editTicket(recievingId, decodedT , lock)
+            ticketexists = existsTicket(id)
 
-                editedTicket = getTicketbyId(recievingId)
+            if ticketexists:
 
-                clientsocket.send(dumpTicket(editedTicket).encode())
+                modifiers = modifiers.decode()
+
+                modifiers_decoded = json.loads(modifiers)
+
+                data_ticket = recvJson(data_ticket.decode())
+
+                params_applied = editionFiltred(recievingId,modifiers_decoded,data_ticket)
+
+                editTicket(recievingId, params_applied)
+
+                edited_ticket = getTicketbyId(recievingId)
+
+                clientsocket.send(dumpTicket(edited_ticket).encode())
+
+                print(messages.TCKT_EDITED, ip)
+
 
             else:
 
                 clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
 
-        elif(client_opt.decode() == 'EXPORT'):
+            generateHistory(ip, client_opt.decode())
+
+        elif client_opt.decode() == 'EXPORT':
+
+            clientsocket.send(messages.OPT_EXPORT_TICK.encode())
 
             client_filters = clientsocket.recv(1024)
 
@@ -116,8 +138,14 @@ def newClient(clientsocket, address):
 
             generateHistory(ip, client_opt.decode())
 
-        elif(client_opt.decode() == 'EXIT'):
+        elif client_opt.decode() == 'CLEAR':
+
+            generateHistory(ip,client_opt.decode())
+
+        elif client_opt.decode() == 'EXIT':
+
             print(messages.SCK_CLOSED, ip)
+
             break
             
         if not client_opt:
@@ -125,16 +153,6 @@ def newClient(clientsocket, address):
 
 
     clientsocket.close()
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -162,10 +180,12 @@ if __name__ == "__main__":
 
     print(messages.SV_WAITING)
 
+    lock = threading.Lock()
+
     while True:
         c, addr = s.accept()
 
-        th = threading.Thread(target=newClient, args=(c, addr))
+        th = threading.Thread(target=newClient, args=(c, addr,lock,))
 
         th.start()
 

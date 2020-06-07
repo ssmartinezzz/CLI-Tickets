@@ -13,8 +13,6 @@ import multiprocessing
 
 def exportTickets(socket,filtersapplied,ticketData):
 
-
-
     socket.send(filtersapplied.encode())
 
     socket.send(ticketData.encode())
@@ -28,12 +26,6 @@ def exportTickets(socket,filtersapplied,ticketData):
     generateCSV(list_tickets)
 
     print(messages.CLIENT_EXPORT_SUCCESS)
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
@@ -68,14 +60,13 @@ if __name__ == "__main__":
 
         destination = cliController.mainClientCLI()
 
+        if destination == "INSERT":
 
-
-        if destination == ("INSERT"):
             clearTerminal()
 
             client.send(destination.encode())
 
-            time.sleep(3)
+            print(client.recv(1024).decode())
 
             cliTick = cliController.clientAddCLI()
 
@@ -85,13 +76,13 @@ if __name__ == "__main__":
 
             print(client.recv(1024).decode())
 
-
-
-        elif destination == ("LIST") :
+        elif destination == "LIST":
 
             client.send(destination.encode())
 
-            time.sleep(3)
+            clearTerminal()
+
+            print(client.recv(1024).decode())
 
             filtersapplied,ticketData = cliController.clientListCLI()
 
@@ -111,31 +102,35 @@ if __name__ == "__main__":
 
             printableTicket(list_tickets)
 
-
-
-
-
-        elif destination == ("EDIT"):
+        elif destination == "EDIT":
 
             clearTerminal()
 
             client.send(destination.encode())
 
-            time.sleep(3)
+            print(client.recv(1024).decode())
 
-            ticketToedit = cliController.cliientEditCLI()
+            modifiers, ticket_toedit = cliController.cliientEditCLI()
 
-            if (idValidator(ticketToedit[0]) == True):
+            if idValidator(ticket_toedit['id']):
 
-                ticketexists = existsTicket(ticketToedit[0])
+                ticket_exists = existsTicket(ticket_toedit['id'])
 
-                if (ticketexists):
+                if ticket_exists:
 
-                    client.send(str(ticketToedit[0]).encode())
+                    id = ticket_toedit['id']
 
-                    edit = {'title': ticketToedit[1], 'status': ticketToedit[2], 'description': ticketToedit[3]}
+                    modifiers = sendJson(modifiers)
 
-                    client.send(sendJson(edit).encode())
+                    ticket_toedit = sendJson(ticket_toedit)
+
+                    client.send(str(id).encode())
+
+                    print(client.recv(1024).decode("utf-8"))
+
+                    client.send(modifiers.encode())
+
+                    client.send(ticket_toedit.encode())
 
                     editedTicket = client.recv(1024)
 
@@ -145,18 +140,16 @@ if __name__ == "__main__":
 
                     print(messages.ERR_MSG_NOAVAILABLE)
 
-
-
             else:
                 print(messages.ERR_MSG_INPUT)
 
-        elif destination ==("EXPORT"):
+        elif destination == "EXPORT":
 
             client.send(destination.encode())
 
-            time.sleep(3)
-
             clearTerminal()
+
+            print(client.recv(1024).decode())
 
             filtersapplied, ticketData = cliController.clientListCLI()
 
@@ -168,20 +161,24 @@ if __name__ == "__main__":
 
             paralell_p.start()
 
-            time.sleep(4)
+            time.sleep(2)
 
             paralell_p.join()
 
+        elif destination == "CLEAR":
 
-
-
-
-
-
-        elif destination == ("EXIT"):
             clearTerminal()
+
             client.send(destination.encode())
+
+        elif destination == "EXIT":
+
+            clearTerminal()
+
+            client.send(destination.encode())
+
             break
+
 
         else:
             print(messages.OPT_WRONG)
