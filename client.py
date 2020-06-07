@@ -178,11 +178,19 @@ if __name__ == "__main__":
             client.send(destination.encode())
 
             break
-
-
         else:
+
             print(messages.OPT_WRONG)
 
+    """ client.settimeout(0.5)
+
+           try:
+
+               message = client.recv(1024).decode()
+               if not message: break
+           except socket.timeout:
+               pass
+           """
     print(messages.OPT_EXIT)
 
     client.close()

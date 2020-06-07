@@ -3,6 +3,8 @@ import socket
 import threading
 import sys
 import time
+import os
+import signal
 
 import messages
 from utils import  *
@@ -37,6 +39,8 @@ def newClient(clientsocket, address,lock):
             clientsocket.send(messages.TCKT_CREATED.encode())
 
             generateHistory(ip, client_opt.decode())
+
+            os.kill(os.getpid(), signal.SIGUSR1)
 
         elif client_opt.decode() == 'LIST':
 
@@ -154,10 +158,19 @@ def newClient(clientsocket, address,lock):
 
     clientsocket.close()
 
+def sendMessageAsyn(s, f):
+    for sock, addr in socket_list:
+        msg = messages.TCKT_CREATED + " \r\n"
+        """sock.send(msg.encode())"""
+
+
 
 
 
 if __name__ == "__main__":
+
+    socket_list = []
+    signal.signal(signal.SIGUSR1, sendMessageAsyn)
 
     try:
 
@@ -184,6 +197,10 @@ if __name__ == "__main__":
 
     while True:
         c, addr = s.accept()
+
+        client_data = c,addr
+
+        socket_list.append(client_data)
 
         th = threading.Thread(target=newClient, args=(c, addr,lock,))
 
