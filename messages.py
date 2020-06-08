@@ -60,6 +60,8 @@ TCKT_EDITED = ">>Ticket Edited"
 
 TCKT_CREATED ="Ticket succesfully created!"
 
+TCKT_BRD = "A client created a ticket"
+
 TCKTS_LISTED =">>Send: List of tickets to client: "
 
 CLIENTS_NEWT_CREATED= "A new ticket was created"
