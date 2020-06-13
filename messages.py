@@ -9,7 +9,7 @@ SV_RECV_ID =">>Server recieved Id: "
 
 NEW_PROCESS = ">>Exporting a ticket.\n\n"
 
-SV_THREAD = "Initializing thread..\n"
+SV_THREAD = "Initializing thread 'ID':"
 
 SCKT_ERROR = "Error while creating the socket. Stopping execution"
 
@@ -69,3 +69,7 @@ TCKTS_LISTED =">>Send: List of tickets to client: "
 CLIENTS_NEWT_CREATED= "A new ticket was created"
 
 CLIENT_EXPORT_SUCCESS= "Tickets exported in your directory"
+
+KYBRD_INTERRUPT = "Keyboard interrupted"
+
+EOFE = "¡EOFE!"

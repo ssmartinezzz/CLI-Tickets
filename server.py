@@ -10,6 +10,7 @@ import server_functions
 def newClient(clientsocket, address, lock):
 
     server_functions.main_execution(clientsocket,address,lock)
+    print(messages.SCK_CLOSED,addr)
 
     clientsocket.close()
 

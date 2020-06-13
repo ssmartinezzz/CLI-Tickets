@@ -65,7 +65,7 @@ def generateHistory(address ,operation):
 
 def printableTicket(d):
    for key in d:
-       print("Id:",key['id'],"\n",
+       print("==============================","\n\n","#Ticket Id:",key['id'],"\n",
 
        "Title:",key['title'],"\n",
 
@@ -75,8 +75,7 @@ def printableTicket(d):
 
        "Description:",key['description'],"\n",
 
-       "Status:",key['status'],"\n",
-             "-------------------------------------")
+       "Status:",key['status'],"\n\n")
 
 
 def clearTerminal():

@@ -1,3 +1,4 @@
+import threading
 
 from dbFunctions import *
 from filter import *
@@ -5,7 +6,8 @@ import signal
 from utils import  *
 
 def main_execution(clientsocket,address,lock):
-    print(messages.SV_THREAD)
+
+    print(messages.SV_THREAD,threading.get_ident())
 
     print(messages.SV_CONNECTION, address)
 
