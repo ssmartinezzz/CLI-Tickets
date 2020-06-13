@@ -7,18 +7,9 @@ def parse_args(string):
 
 
 def parseSpaces(string):
-    command = []
-    aux = str()
-    auxiliarArray = str()
-
-    if re.split("\"", string):
-        for i in string.split(" "):
-            command.append(i)
-
-        for i in command:
-            aux = aux + i + " "
-
-        auxiliarArray = [x.strip() for x in re.split(r'(?<!^)(?=\s+-)', aux)]
+    auxiliarArray = []
+    for s in string:
+        auxiliarArray = ([x.strip() for x in re.split(r'(?<!^)(?=\s+-)',string)])
 
 
     return auxiliarArray

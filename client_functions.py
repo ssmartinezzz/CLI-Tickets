@@ -85,7 +85,6 @@ def main_execution(client):
                 modifiers, ticket_toedit = cliController.cliientEditCLI()
 
                 if idValidator(ticket_toedit['id']):
-
                     id = ticket_toedit['id']
 
                     modifiers = sendJson(modifiers)
@@ -104,7 +103,9 @@ def main_execution(client):
 
                     print(recvJson(editedTicket.decode()))
 
-        
+
+
+
             elif destination == "EXPORT":
 
                 client.send(destination.encode())
