@@ -5,7 +5,7 @@ import multiprocessing
 import messages
 from jsonService import *
 import time
-from dbFunctions import *
+
 from utils import *
 
 
@@ -86,33 +86,25 @@ def main_execution(client):
 
                 if idValidator(ticket_toedit['id']):
 
-                    ticket_exists = existsTicket(ticket_toedit['id'])
+                    id = ticket_toedit['id']
 
-                    if ticket_exists:
+                    modifiers = sendJson(modifiers)
 
-                        id = ticket_toedit['id']
+                    ticket_toedit = sendJson(ticket_toedit)
 
-                        modifiers = sendJson(modifiers)
+                    client.send(str(id).encode())
 
-                        ticket_toedit = sendJson(ticket_toedit)
+                    print(client.recv(1024).decode("utf-8"))
 
-                        client.send(str(id).encode())
+                    client.send(modifiers.encode())
 
-                        print(client.recv(1024).decode("utf-8"))
+                    client.send(ticket_toedit.encode())
 
-                        client.send(modifiers.encode())
+                    editedTicket = client.recv(1024)
 
-                        client.send(ticket_toedit.encode())
+                    print(recvJson(editedTicket.decode()))
 
-                        editedTicket = client.recv(1024)
-
-                        print(recvJson(editedTicket.decode()))
-
-                    else:
-
-                        print(messages.ERR_MSG_NOAVAILABLE)
-
-
+        
             elif destination == "EXPORT":
 
                 client.send(destination.encode())
