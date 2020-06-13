@@ -68,17 +68,19 @@ def main_execution(clientsocket,address,lock):
 
             recievingId = clientsocket.recv(1024)
 
-            recievingId = int(recievingId.decode())
+            recievingId = recievingId.decode()
 
-            clientsocket.send(messages.SV_RECV_ID.encode("utf-8"))
+            ticketexists = existsTicket(recievingId)
 
-            modifiers = clientsocket.recv(1024)
+            if ticketexists == True:
 
-            data_ticket = clientsocket.recv(1024)
+                msg = "EXISTS"
 
-            ticketexists = existsTicket(id)
+                clientsocket.send(msg.encode())
 
-            if ticketexists:
+                modifiers = clientsocket.recv(1024)
+
+                data_ticket = clientsocket.recv(1024)
 
                 modifiers = modifiers.decode()
 

@@ -84,7 +84,10 @@ def main_execution(client):
 
                 modifiers, ticket_toedit = cliController.cliientEditCLI()
 
-                if idValidator(ticket_toedit['id']):
+                correct_input_id = idValidator(ticket_toedit['id'])
+
+                if correct_input_id:
+
                     id = ticket_toedit['id']
 
                     modifiers = sendJson(modifiers)
@@ -93,16 +96,20 @@ def main_execution(client):
 
                     client.send(str(id).encode())
 
-                    print(client.recv(1024).decode("utf-8"))
+                    if client.recv(1024).decode("utf-8") == "EXISTS":
 
-                    client.send(modifiers.encode())
+                        client.send(modifiers.encode())
 
-                    client.send(ticket_toedit.encode())
+                        client.send(ticket_toedit.encode())
 
-                    editedTicket = client.recv(1024)
+                        editedTicket = client.recv(1024)
 
-                    print(recvJson(editedTicket.decode()))
+                        print(recvJson(editedTicket.decode()))
 
+                    else:
+                        print(messages.ERR_MSG_NOAVAILABLE)
+                else:
+                    break
 
 
 

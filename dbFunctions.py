@@ -48,20 +48,26 @@ def listTicketsbyDateAuthOrStatus():
 
 
 def existsTicket (id):
-    if(session.query(exists().where(Ticket.id == id))):
-        return True
-    else:
-        return False
+    try:
+        exists = session.query(Ticket).get(int(id))
+
+        if exists is not None:
+
+            val = True
+
+        else:
+
+            val = False
+    except ValueError:
+        val = False
+
+    return val
 
 def getTicketbyId(id):
 
     ticket = session.query(Ticket).get(int(id))
 
-
     return ticket.ticketToJson()
-
-
-
 
 def editTicket(id,params_applied):
 
