@@ -1,8 +1,8 @@
 import getopt
+import sys
 import time
-import messages
 from parserUtilities import *
-from utils import formatDate, checkStatus
+from utils import *
 
 
 
@@ -118,25 +118,41 @@ def clientListCLI():
 
             date = ar
 
-            searchDate = formatDate(date)
+            try:
+                searchDate = formatDate(date)
 
-            present_date = "date"
+                present_date = "date"
 
-            filters_applied.append(present_date)
+                filters_applied.append(present_date)
 
-            ticket['date'] = searchDate
+                ticket['date'] = searchDate
+
+            except ValueError:
+
+                print(messages.ERR_MSG_DATE)
+
+                sys.exit()
 
         elif op == '-s':
 
             status =str(ar)
 
-            checkStatus(status)
+            try:
+                checkStatus(status)
 
-            present_status = "status"
+                present_status = "status"
 
-            filters_applied.append(present_status)
+                filters_applied.append(present_status)
 
-            ticket['status'] = status
+                ticket['status'] = status
+
+            except ValueError:
+
+                print(messages.ERR_MSG_STATUS)
+
+                sys.exit()
+
+
 
         elif op =='-v':
             none_filters = str(ar)
@@ -163,7 +179,7 @@ def cliientEditCLI():
     for (op, ar) in option:
         if op == '-i':
 
-            id = int(ar)
+            id = ar
 
             present_id = "id"
 
@@ -184,13 +200,23 @@ def cliientEditCLI():
 
             status = str(ar)
 
-            checkStatus(status)
+            try:
+                checkStatus(status)
 
-            present_status ="status"
+                present_status = "status"
 
-            modifiers.append(present_status)
+                modifiers.append(present_status)
 
-            ticket['status'] = (status)
+                ticket['status'] = (status)
+
+            except ValueError:
+
+                print(messages.ERR_MSG_STATUS)
+
+                sys.exit()
+
+
+
         elif op == '-d':
 
             description = str(ar)

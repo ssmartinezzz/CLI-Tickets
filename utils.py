@@ -20,7 +20,7 @@ def idValidator(id):
         return True
 
     except ValueError:
-
+        print(messages.ERR_MSG_INPUT)
         return False
 
 def checkStatus(status):
@@ -30,8 +30,13 @@ def checkStatus(status):
         pass
 
     else:
+        raise ValueError
 
-        print(messages.ERR_MSG_STATUS)
+
+
+
+
+
 
 def generateCSV(tickets):
     with gzip.open("tickets.csv.gz", "wt", newline="") as file:

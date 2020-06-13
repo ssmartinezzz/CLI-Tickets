@@ -108,8 +108,6 @@ def main_execution(client):
 
                     print(messages.ERR_MSG_NOAVAILABLE)
 
-            else:
-                print(messages.ERR_MSG_INPUT)
 
         elif destination == "EXPORT":
 
