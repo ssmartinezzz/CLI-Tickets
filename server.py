@@ -1,3 +1,4 @@
+import getopt
 import socket
 import threading
 import sys
@@ -19,6 +20,14 @@ def sendMessageAsyn(s, f):
 
 if __name__ == "__main__":
 
+    (opt, arg) = getopt.getopt(sys.argv[1:], 'p:')
+
+    for (op, ar) in opt:
+
+        if op == '-p':
+
+            port = int(ar)
+
     socket_list = []
     signal.signal(signal.SIGUSR1, sendMessageAsyn)
 
@@ -33,7 +42,7 @@ if __name__ == "__main__":
 
     host = '0.0.0.0'
 
-    port = 8080
+
 
     s.bind((host, port))
 

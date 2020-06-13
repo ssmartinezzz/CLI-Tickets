@@ -58,8 +58,9 @@ La explicación detallada de los comandos aplicables, está detallada en el arch
 Para lanzar el servidor se debe estar en el directorio de los archivos con el *entorno virtual* encendido y ejecutar en una terminal
  ```sh
 $ source bin/activate
-(directorio) ordenador@xx:path_directorio$ python3 server.py
-```
+(directorio) ordenador@xx:path_directorio$ python3 server.py -p portn°
+ ```
+El parámetro -p sirve para indicar por la terminal, en qué puerto se quiere atender el servicio
 Una vez landazo el servidor podemos conectar clientes lanzandolos desde otras terminales de la siguiente manera:
  ```sh
 $ source bin/activate
