@@ -1,4 +1,5 @@
 import threading
+from json import JSONDecodeError
 
 from dbFunctions import *
 from filter import *
@@ -23,9 +24,15 @@ def main_execution(clientsocket,address,lock):
 
             ticketrecv = clientsocket.recv(1024)
 
-            decoded_t = recvJson(ticketrecv.decode())
+            try:
+                decoded_t = recvJson(ticketrecv.decode())
 
-            addTicket(decoded_t, lock)
+                addTicket(decoded_t, lock)
+            except JSONDecodeError:
+
+                print(messages.ERR_MSG_NO_DATA)
+
+                break
 
             clientsocket.send(messages.TCKT_CREATED.encode())
 
@@ -56,9 +63,11 @@ def main_execution(clientsocket,address,lock):
 
                 print(messages.TCKTS_LISTED, ip)
 
-            except:
+            except JSONDecodeError:
 
-                pass
+                print(messages.ERR_MSG_NO_DATA)
+
+                break
 
             generateHistory(ip, client_opt.decode())
 
@@ -140,9 +149,4 @@ def main_execution(clientsocket,address,lock):
 
         elif client_opt.decode() == 'EXIT':
 
-            print(messages.SCK_CLOSED, ip)
-
-            break
-
-        if not client_opt:
             break

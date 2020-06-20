@@ -21,6 +21,9 @@ def sendMessageAsyn(s, f):
 
 if __name__ == "__main__":
 
+    "Default port instance, could be given by terminal anyway"
+    port = 8080
+
     (opt, arg) = getopt.getopt(sys.argv[1:], 'p:')
 
     for (op, ar) in opt:
@@ -30,16 +33,18 @@ if __name__ == "__main__":
             port = int(ar)
 
     socket_list = []
+
     signal.signal(signal.SIGUSR1, sendMessageAsyn)
 
     try:
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        print(messages.SCKT_CREATED)
 
-    except socket.error:
+    except socket.error or PermissionError:
         print(messages.SCKT_ERROR)
         sys.exit()
-    print(messages.SCKT_CREATED)
+
 
     host = '0.0.0.0'
 
@@ -56,15 +61,41 @@ if __name__ == "__main__":
     lock = threading.Lock()
 
     while True:
-        c, addr = s.accept()
 
-        client_data = c,addr
+        threads_list = list()
 
-        socket_list.append(client_data)
+        try:
 
-        th = threading.Thread(target=newClient, args=(c, addr,lock,))
+            c, addr = s.accept()
 
-        th.start()
+            client_data = c, addr
+
+            socket_list.append(client_data)
+
+            th = threading.Thread(target=newClient, args=(c, addr, lock,))
+
+            threads_list.append(th)
+
+            th.start()
+
+        except KeyboardInterrupt or EOFError:
+
+            if KeyboardInterrupt:
+
+                print("\n", messages.KYBRD_INTERRUPT)
+
+            elif EOFError:
+
+                print("\n", messages.EOFE)
+
+            sys.exit()
+
+
+
+
+
+
+
 
 
 
