@@ -28,15 +28,15 @@ if __name__ == "__main__":
 
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    except socket.error:
+        client.connect((host, port))
+
+        print(messages.SCKT_CREATED)
+
+    except socket.error or ConnectionRefusedError:
 
         print(messages.SCKT_ERROR)
 
         sys.exit()
-
-    print(messages.SCKT_CREATED)
-
-    client.connect((host, port))
 
     client_functions.main_execution(client,)
 

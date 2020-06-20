@@ -26,6 +26,7 @@ def exportTickets(socket,filtersapplied,ticketData):
     print(messages.CLIENT_EXPORT_SUCCESS)
 
 def main_execution(client):
+
     while True:
 
         try:
@@ -42,11 +43,20 @@ def main_execution(client):
 
                 cliTick = cliController.clientAddCLI()
 
-                ticket = {'title': cliTick[0], 'author': cliTick[1], 'description': cliTick[2]}
+                try:
 
-                client.send(sendJson(ticket).encode())
+                    ticket = {'title': cliTick[0], 'author': cliTick[1], 'description': cliTick[2]}
 
-                print(client.recv(1024).decode())
+                    client.send(sendJson(ticket).encode())
+
+                    print(client.recv(1024).decode())
+
+                except IndexError:
+
+                    print(messages.ERR_MSG_INPUT)
+
+                    break
+
 
             elif destination == "LIST":
 
@@ -152,17 +162,21 @@ def main_execution(client):
 
                 print(messages.OPT_WRONG)
 
-        except KeyboardInterrupt:
+        except KeyboardInterrupt or EOFError or BrokenPipeError:
 
-            print("\n",messages.KYBRD_INTERRUPT)
+            if KeyboardInterrupt:
+
+                print("\n", messages.KYBRD_INTERRUPT)
+
+            elif EOFError:
+
+                print("\n", messages.EOFE)
+
+            elif BrokenPipeError:
+                print("\n",messages.ERR_MSG_BP)
 
             sys.exit()
 
-        except EOFError:
-
-            print("\n",messages.EOFE)
-
-            sys.exit()
 
 
     """ client.settimeout(0.5)

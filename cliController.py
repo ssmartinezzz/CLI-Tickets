@@ -13,7 +13,17 @@ def mainClientCLI():
 
     parsedOption = parseSpaces(choosedOption)
 
-    (option, arg) = getopt.getopt(parsedOption[0:], 'i l e x o c', ["insert", "list", "edit", "export", "exit","clear"])
+    try:
+        (option, arg) = getopt.getopt(parsedOption[0:], 'i l e x o c',
+                                      ["insert", "list", "edit", "export", "exit", "clear"])
+
+    except getopt.GetoptError as err:
+
+        print(str(err))
+
+        sys.exit()
+
+
 
     destination = ('EXIT')
 
@@ -59,7 +69,16 @@ def clientAddCLI():
 
     parsedOPT = parseSpaces(chosedOPT)
 
-    (option, arg) = getopt.getopt(parsedOPT[0:], 't:a:d:')
+    try:
+
+        (option, arg) = getopt.getopt(parsedOPT[0:], 't:a:d:')
+
+    except getopt.GetoptError as err:
+
+        print(str(err))
+
+        sys.exit()
+
 
 
     for (op, ar) in option:
@@ -87,7 +106,16 @@ def clientListCLI():
 
     parsed_opt = parseSpaces(chosed_opt)
 
-    (option, arg) = getopt.getopt(parsed_opt[0:], 'p:a:d:s:v')
+    try:
+
+        (option, arg) = getopt.getopt(parsed_opt[0:], 'p:a:d:s:v')
+
+    except getopt.GetoptError as err:
+
+        print(str(err))
+
+        sys.exit()
+
 
     filters_applied = []
 
@@ -171,11 +199,20 @@ def cliientEditCLI():
 
     parsedOPT = parseSpaces(chosedOPT)
 
-    (option, arg) = getopt.getopt(parsedOPT[0:], 'i:t:d:s:')
+    try:
+
+        (option, arg) = getopt.getopt(parsedOPT[0:], 'i:t:d:s:')
+
+    except getopt.GetoptError as err:
+
+        print((str(err)))
+
+        sys.exit()
 
     modifiers = []
 
     ticket = {}
+
     for (op, ar) in option:
         if op == '-i':
 
@@ -227,7 +264,7 @@ def cliientEditCLI():
 
             ticket['description'] = description
 
-    return modifiers,ticket
+    return modifiers , ticket
 
 
 

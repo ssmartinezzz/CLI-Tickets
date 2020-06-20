@@ -7,11 +7,11 @@ SV_CONNECTION = ">>Server got connection from"
 
 SV_RECV_ID =">>Server recieved Id: "
 
-NEW_PROCESS = ">>Exporting a ticket.\n\n"
+NEW_PROCESS = ">>Exporting a ticket. Client: "
 
 SV_THREAD = "Initializing thread 'ID':"
 
-SCKT_ERROR = "Error while creating the socket. Stopping execution"
+SCKT_ERROR = "Error during creating the socket. Stopping execution"
 
 SCKT_CREATED = "Socket succesfully created!"
 
@@ -55,6 +55,8 @@ ERR_MSG_DATE = "Invalid date input"
 ERR_MSG_NOAVAILABLE = "NOT FOUNDED RESOURCE"
 
 ERR_MSG_NO_DATA = "SERVER COULDN'T RECIEVE DATA FROM CLIENT"
+
+ERR_MSG_BP = "Broken pipe!"
 
 TCKT_FOUND = "TICKET FOUNDED TO MODIFY:"
 

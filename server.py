@@ -39,20 +39,20 @@ if __name__ == "__main__":
     try:
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        print(messages.SCKT_CREATED)
+
+        host = '0.0.0.0'
+
+        s.bind((host, port))
+
+        s.listen(5)
 
     except socket.error or PermissionError:
+
         print(messages.SCKT_ERROR)
+
         sys.exit()
 
-
-    host = '0.0.0.0'
-
-
-
-    s.bind((host, port))
-
-    s.listen(5)
+    print(messages.SCKT_CREATED)
 
     print(messages.SV_START)
 
