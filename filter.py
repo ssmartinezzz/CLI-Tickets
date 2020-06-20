@@ -52,8 +52,6 @@ def editionFiltred(id,modifiers,dataTicket):
     local_attributes.append(ticketModeable.description)
     local_attributes.append(ticketModeable.status)
 
-    print(local_attributes)
-
     if "title" in modifiers and "description" in modifiers and "status" in modifiers:
 
         local_attributes[0] = dataTicket['title']
