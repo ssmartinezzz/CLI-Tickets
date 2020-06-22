@@ -3,13 +3,55 @@ import socket
 import threading
 import sys
 import signal
+from json import JSONDecodeError
+
 import messages
 import server_functions
 
 
 def newClient(clientsocket, address, lock):
 
-    server_functions.main_execution(clientsocket,address,lock)
+    print(messages.SV_THREAD, threading.get_ident())
+
+    print(messages.SV_CONNECTION, address)
+
+    ip, host = clientsocket.getpeername()
+
+    while True:
+
+        try:
+            client_opt = clientsocket.recv(1024)
+
+            if client_opt.decode() == 'INSERT':
+
+                server_functions.server_insertion(clientsocket, lock, ip, client_opt)
+
+            elif client_opt.decode() == 'LIST':
+
+                server_functions.server_list(clientsocket, ip, client_opt)
+
+            elif client_opt.decode() == 'EDIT':
+
+                server_functions.server_editTicket(clientsocket, ip, client_opt)
+
+            elif client_opt.decode() == 'EXPORT':
+
+                server_functions.server_exportTicket(clientsocket, ip, client_opt)
+
+            elif client_opt.decode() == 'CLEAR':
+
+                server_functions.server_clear(ip, client_opt)
+
+            elif client_opt.decode() == 'EXIT':
+
+                break
+
+        except JSONDecodeError:
+
+            print(messages.ERR_MSG_NO_DATA)
+
+            break
+
     print(messages.SCK_CLOSED,addr)
 
     clientsocket.close()

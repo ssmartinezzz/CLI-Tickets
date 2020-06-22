@@ -5,7 +5,7 @@ SV_WAITING = "Server waiting for clients \n"
 
 SV_CONNECTION = ">>Server got connection from"
 
-SV_RECV_ID =">>Server recieved Id: "
+SV_RECV_ID = ">>Server recieved Id: "
 
 NEW_PROCESS = ">>Exporting a ticket. Client: "
 
@@ -60,7 +60,7 @@ ERR_MSG_BP = "Broken pipe!"
 
 TCKT_FOUND = "TICKET FOUNDED TO MODIFY:"
 
-TCKT_EDITED = ">>Ticket Edited"
+TCKT_EDITED = ">>Ticket Edited by"
 
 TCKT_CREATED ="Ticket succesfully created!"
 
@@ -71,6 +71,8 @@ TCKTS_LISTED =">>Send: List of tickets to client: "
 CLIENTS_NEWT_CREATED= "A new ticket was created"
 
 CLIENT_EXPORT_SUCCESS= "Tickets exported in your directory"
+
+CLIENT_CLEARED = "A client cleared its own terminal"
 
 KYBRD_INTERRUPT = "Keyboard interrupted"
 

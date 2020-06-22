@@ -1,3 +1,4 @@
+import sys
 import threading
 from json import JSONDecodeError
 
@@ -6,147 +7,114 @@ from filter import *
 import signal
 from utils import  *
 
-def main_execution(clientsocket,address,lock):
+def server_insertion(clientsocket, lock,ip,client_opt):
 
-    print(messages.SV_THREAD,threading.get_ident())
+    clientsocket.send(messages.OPT_ADD_TICK.encode())
 
-    print(messages.SV_CONNECTION, address)
+    ticketrecv = clientsocket.recv(1024)
 
-    ip, host = clientsocket.getpeername()
+    decoded_t = recvJson(ticketrecv.decode())
 
-    while True:
+    addTicket(decoded_t, lock)
 
-        client_opt = clientsocket.recv(1024)
+    clientsocket.send(messages.TCKT_CREATED.encode())
 
-        if client_opt.decode() == 'INSERT':
+    generateHistory(ip, client_opt.decode())
 
-            clientsocket.send(messages.OPT_ADD_TICK.encode())
+    os.kill(os.getpid(), signal.SIGUSR1)
 
-            ticketrecv = clientsocket.recv(1024)
+def server_list(clientsocket,ip,client_opt):
 
-            try:
-                decoded_t = recvJson(ticketrecv.decode())
+    clientsocket.send(messages.OPT_LIST_TICK.encode())
 
-                addTicket(decoded_t, lock)
-            except JSONDecodeError:
+    client_filters = clientsocket.recv(1024)
 
-                print(messages.ERR_MSG_NO_DATA)
+    data_ticket = clientsocket.recv(1024)
 
-                break
+    client_filters = client_filters.decode()
 
-            clientsocket.send(messages.TCKT_CREATED.encode())
+    filters_decoded = json.loads(client_filters)
 
-            generateHistory(ip, client_opt.decode())
+    data_ticket = recvJson(data_ticket.decode())
 
-            os.kill(os.getpid(), signal.SIGUSR1)
+    result = filterAction(filters_decoded, data_ticket)
 
-        elif client_opt.decode() == 'LIST':
+    result = str(result)
 
-            clientsocket.send(messages.OPT_LIST_TICK.encode())
+    clientsocket.send(result.encode())
 
-            client_filters = clientsocket.recv(1024)
+    print(messages.TCKTS_LISTED, ip)
 
-            data_ticket = clientsocket.recv(1024)
+    generateHistory(ip, client_opt.decode())
 
-            client_filters = client_filters.decode()
+def server_editTicket(clientsocket,ip,client_opt):
 
-            try:
-                filters_decoded = json.loads(client_filters)
+    clientsocket.send(messages.OPT_EDIT_TICK.encode())
 
-                data_ticket = recvJson(data_ticket.decode())
+    recievingId = clientsocket.recv(1024)
 
-                result = filterAction(filters_decoded, data_ticket)
+    recievingId = recievingId.decode()
 
-                result = str(result)
+    ticketexists = existsTicket(recievingId)
 
-                clientsocket.send(result.encode())
+    if ticketexists == True:
 
-                print(messages.TCKTS_LISTED, ip)
+        msg = "EXISTS"
 
-            except JSONDecodeError:
+        clientsocket.send(msg.encode())
 
-                print(messages.ERR_MSG_NO_DATA)
+        modifiers = clientsocket.recv(1024)
 
-                break
+        data_ticket = clientsocket.recv(1024)
 
-            generateHistory(ip, client_opt.decode())
+        modifiers = modifiers.decode()
 
-        elif client_opt.decode() == 'EDIT':
+        modifiers_decoded = json.loads(modifiers)
 
-            clientsocket.send(messages.OPT_EDIT_TICK.encode())
+        data_ticket = recvJson(data_ticket.decode())
 
-            recievingId = clientsocket.recv(1024)
+        params_applied = editionFiltred(recievingId, modifiers_decoded, data_ticket)
 
-            recievingId = recievingId.decode()
+        editTicket(recievingId, params_applied)
 
-            ticketexists = existsTicket(recievingId)
+        edited_ticket = getTicketbyId(recievingId)
 
-            if ticketexists == True:
+        clientsocket.send(dumpTicket(edited_ticket).encode())
 
-                msg = "EXISTS"
+        print(messages.TCKT_EDITED, ip)
 
-                clientsocket.send(msg.encode())
+    else:
 
-                modifiers = clientsocket.recv(1024)
+        clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
 
-                data_ticket = clientsocket.recv(1024)
+    generateHistory(ip, client_opt.decode())
 
-                modifiers = modifiers.decode()
+def server_exportTicket(clientsocket,ip,client_opt):
 
-                modifiers_decoded = json.loads(modifiers)
+    clientsocket.send(messages.OPT_EXPORT_TICK.encode())
 
-                data_ticket = recvJson(data_ticket.decode())
+    client_filters = clientsocket.recv(1024)
 
-                params_applied = editionFiltred(recievingId, modifiers_decoded, data_ticket)
+    data_ticket = clientsocket.recv(1024)
 
-                editTicket(recievingId, params_applied)
+    client_filters = client_filters.decode()
 
-                edited_ticket = getTicketbyId(recievingId)
+    filters_decoded = json.loads(client_filters)
 
-                clientsocket.send(dumpTicket(edited_ticket).encode())
+    data_ticket = recvJson(data_ticket.decode())
 
-                print(messages.TCKT_EDITED, ip)
+    result = filterAction(filters_decoded, data_ticket)
 
+    result = str(result)
 
-            else:
+    clientsocket.send(result.encode())
 
-                clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
+    print(messages.NEW_PROCESS, ip)
 
-            generateHistory(ip, client_opt.decode())
+    generateHistory(ip, client_opt.decode())
 
-        elif client_opt.decode() == 'EXPORT':
+def server_clear(ip,client_opt):
 
-            clientsocket.send(messages.OPT_EXPORT_TICK.encode())
+    print(messages.CLIENT_CLEARED, ip)
 
-            client_filters = clientsocket.recv(1024)
-
-            data_ticket = clientsocket.recv(1024)
-
-            client_filters = client_filters.decode()
-
-            try:
-                filters_decoded = json.loads(client_filters)
-
-                data_ticket = recvJson(data_ticket.decode())
-
-                result = filterAction(filters_decoded, data_ticket)
-
-                result = str(result)
-
-                clientsocket.send(result.encode())
-
-                print(messages.NEW_PROCESS, ip)
-
-            except:
-
-                pass
-
-            generateHistory(ip, client_opt.decode())
-
-        elif client_opt.decode() == 'CLEAR':
-
-            generateHistory(ip, client_opt.decode())
-
-        elif client_opt.decode() == 'EXIT':
-
-            break
+    generateHistory(ip, client_opt.decode())
