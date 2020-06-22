@@ -48,7 +48,7 @@ def newClient(clientsocket, address, lock):
 
         except JSONDecodeError:
 
-            print(messages.ERR_MSG_NO_DATA)
+            print(messages.ERR_MSG_NO_DATA,ip)
 
             break
 

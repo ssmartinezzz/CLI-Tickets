@@ -25,167 +25,116 @@ def exportTickets(socket,filtersapplied,ticketData):
 
     print(messages.CLIENT_EXPORT_SUCCESS)
 
-def main_execution(client):
+def client_ticketInsertion(client,destination):
+    clearTerminal()
 
-    while True:
+    client.send(destination.encode())
 
-        try:
+    print(client.recv(1024).decode())
 
-            destination = cliController.mainClientCLI()
+    cliTick = cliController.clientAddCLI()
 
-            if destination == "INSERT":
+    ticket = {'title': cliTick[0], 'author': cliTick[1], 'description': cliTick[2]}
 
-                clearTerminal()
+    client.send(sendJson(ticket).encode())
 
-                client.send(destination.encode())
+    print(client.recv(1024).decode())
 
-                print(client.recv(1024).decode())
+def client_ticketList(client, destination):
 
-                cliTick = cliController.clientAddCLI()
+    client.send(destination.encode())
 
-                try:
+    clearTerminal()
 
-                    ticket = {'title': cliTick[0], 'author': cliTick[1], 'description': cliTick[2]}
+    print(client.recv(1024).decode())
 
-                    client.send(sendJson(ticket).encode())
+    filtersapplied, ticketData = cliController.clientListCLI()
 
-                    print(client.recv(1024).decode())
+    filtersapplied = sendJson(filtersapplied)
 
-                except IndexError:
+    ticketData = sendJson(ticketData)
 
-                    print(messages.ERR_MSG_INPUT)
+    client.send(filtersapplied.encode())
 
-                    break
+    client.send(ticketData.encode())
 
+    ticket_search = client.recv(1024)
 
-            elif destination == "LIST":
+    ticket_search = ticket_search.decode()
 
-                client.send(destination.encode())
+    list_tickets = eval(ticket_search)
 
-                clearTerminal()
+    printableTicket(list_tickets)
 
-                print(client.recv(1024).decode())
+def client_ticketEdition(client,destination):
 
-                filtersapplied, ticketData = cliController.clientListCLI()
+    clearTerminal()
 
-                filtersapplied = sendJson(filtersapplied)
+    client.send(destination.encode())
 
-                ticketData = sendJson(ticketData)
+    print(client.recv(1024).decode())
 
-                client.send(filtersapplied.encode())
+    modifiers, ticket_toedit = cliController.cliientEditCLI()
 
-                client.send(ticketData.encode())
+    correct_input_id = idValidator(ticket_toedit['id'])
 
-                ticket_search = client.recv(1024)
+    if correct_input_id:
 
-                ticket_search = ticket_search.decode()
+        id = ticket_toedit['id']
 
-                list_tickets = eval(ticket_search)
+        modifiers = sendJson(modifiers)
 
-                printableTicket(list_tickets)
+        ticket_toedit = sendJson(ticket_toedit)
 
-            elif destination == "EDIT":
+        client.send(str(id).encode())
 
-                clearTerminal()
+        if client.recv(1024).decode("utf-8") == "EXISTS":
 
-                client.send(destination.encode())
+            client.send(modifiers.encode())
 
-                print(client.recv(1024).decode())
+            client.send(ticket_toedit.encode())
 
-                modifiers, ticket_toedit = cliController.cliientEditCLI()
+            editedTicket = client.recv(1024)
 
-                correct_input_id = idValidator(ticket_toedit['id'])
+            print(recvJson(editedTicket.decode()))
 
-                if correct_input_id:
+        else:
+            print(messages.ERR_MSG_NOAVAILABLE)
+    else:
+        sys.exit()
 
-                    id = ticket_toedit['id']
+def client_ticketExport(client, destination):
 
-                    modifiers = sendJson(modifiers)
+    client.send(destination.encode())
 
-                    ticket_toedit = sendJson(ticket_toedit)
+    clearTerminal()
 
-                    client.send(str(id).encode())
+    print(client.recv(1024).decode())
 
-                    if client.recv(1024).decode("utf-8") == "EXISTS":
+    filtersapplied, ticketData = cliController.clientListCLI()
 
-                        client.send(modifiers.encode())
+    filtersapplied = sendJson(filtersapplied)
 
-                        client.send(ticket_toedit.encode())
+    ticketData = sendJson(ticketData)
 
-                        editedTicket = client.recv(1024)
+    paralell_p = multiprocessing.Process(target=exportTickets, args=(client, filtersapplied, ticketData,))
 
-                        print(recvJson(editedTicket.decode()))
+    paralell_p.start()
 
-                    else:
-                        print(messages.ERR_MSG_NOAVAILABLE)
-                else:
-                    break
+    time.sleep(2)
 
+    paralell_p.join()
 
+def client_clearTerminal(client, destination):
 
-            elif destination == "EXPORT":
+    clearTerminal()
 
-                client.send(destination.encode())
+    client.send(destination.encode())
 
-                clearTerminal()
+def client_exit(client, destination):
+    clearTerminal()
 
-                print(client.recv(1024).decode())
+    client.send(destination.encode())
 
-                filtersapplied, ticketData = cliController.clientListCLI()
 
-                filtersapplied = sendJson(filtersapplied)
-
-                ticketData = sendJson(ticketData)
-
-                paralell_p = multiprocessing.Process(target=exportTickets, args=(client, filtersapplied, ticketData,))
-
-                paralell_p.start()
-
-                time.sleep(2)
-
-                paralell_p.join()
-
-            elif destination == "CLEAR":
-
-                clearTerminal()
-
-                client.send(destination.encode())
-
-            elif destination == "EXIT":
-
-                clearTerminal()
-
-                client.send(destination.encode())
-
-                break
-            else:
-
-                print(messages.OPT_WRONG)
-
-        except KeyboardInterrupt or EOFError or BrokenPipeError:
-
-            if KeyboardInterrupt:
-
-                print("\n", messages.KYBRD_INTERRUPT)
-
-            elif EOFError:
-
-                print("\n", messages.EOFE)
-
-            elif BrokenPipeError:
-                print("\n",messages.ERR_MSG_BP)
-
-            sys.exit()
-
-
-
-    """ client.settimeout(0.5)
-
-           try:
-
-               message = client.recv(1024).decode()
-               if not message: break
-           except socket.timeout:
-               pass
-           """
 
