@@ -1,173 +1,143 @@
-
+import getopt
 import socket
 import threading
 import sys
+import signal
+from json import JSONDecodeError
+
 import messages
-from utils import  *
-from dbFunctions import *
-from filter import *
+import server_functions
 
 
+def newClient(clientsocket, address, lock):
 
-def newClient(clientsocket, address):
-
-    print(messages.SV_THREAD)
+    print(messages.SV_THREAD, threading.get_ident())
 
     print(messages.SV_CONNECTION, address)
 
     ip, host = clientsocket.getpeername()
 
-    lock = threading.Lock()
-
-
-
     while True:
-        client_opt = clientsocket.recv(1024)
-        if (client_opt.decode() == 'INSERT'):
 
-            ticketrecv = clientsocket.recv(1024)
+        try:
+            client_opt = clientsocket.recv(1024)
 
-            decodedT = recvJson(ticketrecv.decode())
+            if client_opt.decode() == 'INSERT':
 
-            addTicket(decodedT,lock)
+                server_functions.server_insertion(clientsocket, lock, ip, client_opt)
 
-            clientsocket.send(messages.TCKT_CREATED.encode())
+            elif client_opt.decode() == 'LIST':
 
-            generateHistory(ip, client_opt.decode())
+                server_functions.server_list(clientsocket, ip, client_opt)
 
+            elif client_opt.decode() == 'EDIT':
 
+                server_functions.server_editTicket(clientsocket, ip, client_opt)
 
-        elif (client_opt.decode() == 'LIST'):
+            elif client_opt.decode() == 'EXPORT':
 
-            client_filters  = clientsocket.recv(1024)
+                server_functions.server_exportTicket(clientsocket, ip, client_opt)
 
-            data_ticket = clientsocket.recv(1024)
+            elif client_opt.decode() == 'CLEAR':
 
-            client_filters = client_filters.decode()
+                server_functions.server_clear(ip, client_opt)
 
-            try:
-                filters_decoded = json.loads(client_filters)
+            elif client_opt.decode() == 'EXIT':
 
-                data_ticket = recvJson(data_ticket.decode())
+                break
 
-                result = filterAction(filters_decoded, data_ticket)
+        except JSONDecodeError:
 
-                result = str(result)
+            print(messages.ERR_MSG_NO_DATA,ip)
 
-                clientsocket.send(result.encode())
-
-                print(messages.TCKTS_LISTED,ip)
-
-            except:
-
-                pass
-
-            generateHistory(ip, client_opt.decode())
-
-        elif (client_opt.decode() == 'EDIT'):
-
-            generateHistory(ip, client_opt.decode())
-
-            recievingId = clientsocket.recv(1024)
-
-            ticketexists = existsTicket(recievingId)
-
-            if (ticketexists):
-
-                containingTicket = clientsocket.recv(1024)
-
-                decodedT = recvJson(containingTicket.decode())
-
-                editTicket(recievingId, decodedT , lock)
-
-                editedTicket = getTicketbyId(recievingId)
-
-                clientsocket.send(dumpTicket(editedTicket).encode())
-
-            else:
-
-                clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
-
-        elif(client_opt.decode() == 'EXPORT'):
-
-            client_filters = clientsocket.recv(1024)
-
-            data_ticket = clientsocket.recv(1024)
-
-            client_filters = client_filters.decode()
-
-
-            try:
-                filters_decoded = json.loads(client_filters)
-
-                data_ticket = recvJson(data_ticket.decode())
-
-                result = filterAction(filters_decoded, data_ticket)
-
-                result = str(result)
-
-                clientsocket.send(result.encode())
-
-                print(messages.NEW_PROCESS, ip)
-
-            except:
-
-                pass
-
-            generateHistory(ip, client_opt.decode())
-
-        elif(client_opt.decode() == 'EXIT'):
-            print(messages.SCK_CLOSED, ip)
-            break
-            
-        if not client_opt:
             break
 
+    print(messages.SCK_CLOSED,addr)
 
     clientsocket.close()
 
-
-
-
-
-
-
-
-
-
-
-
-
+def sendMessageAsyn(s, f):
+    for sock, addr in socket_list:
+        msg = messages.TCKT_CREATED + " \r\n"
+        """sock.send(msg.encode())"""
 
 if __name__ == "__main__":
+
+    "Default port instance, could be given by terminal anyway"
+    port = 8080
+
+    (opt, arg) = getopt.getopt(sys.argv[1:], 'p:')
+
+    for (op, ar) in opt:
+
+        if op == '-p':
+
+            port = int(ar)
+
+    socket_list = []
+
+    signal.signal(signal.SIGUSR1, sendMessageAsyn)
 
     try:
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    except socket.error:
+        host = '0.0.0.0'
+
+        s.bind((host, port))
+
+        s.listen(5)
+
+    except socket.error or PermissionError:
+
         print(messages.SCKT_ERROR)
+
         sys.exit()
+
     print(messages.SCKT_CREATED)
-
-    host = '127.0.0.1'
-
-    port = 8080
-
-    s.bind((host, port))
-
-    s.listen(5)
 
     print(messages.SV_START)
 
     print(messages.SV_WAITING)
 
+    lock = threading.Lock()
+
     while True:
-        c, addr = s.accept()
 
-        th = threading.Thread(target=newClient, args=(c, addr))
+        threads_list = list()
 
-        th.start()
+        try:
+
+            c, addr = s.accept()
+
+            client_data = c, addr
+
+            socket_list.append(client_data)
+
+            th = threading.Thread(target=newClient, args=(c, addr, lock,))
+
+            threads_list.append(th)
+
+            th.start()
+
+        except KeyboardInterrupt or EOFError:
+
+            if KeyboardInterrupt:
+
+                print("\n", messages.KYBRD_INTERRUPT)
+
+            elif EOFError:
+
+                print("\n", messages.EOFE)
+
+            sys.exit()
+
+
+
+
+
+
+
 
 
 

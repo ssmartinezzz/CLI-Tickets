@@ -2,6 +2,7 @@ import datetime
 import messages
 import os
 import csv
+import gzip
 
 
 def formatDate(date):
@@ -19,7 +20,7 @@ def idValidator(id):
         return True
 
     except ValueError:
-
+        print(messages.ERR_MSG_INPUT)
         return False
 
 def checkStatus(status):
@@ -29,12 +30,17 @@ def checkStatus(status):
         pass
 
     else:
+        raise ValueError
 
-        print(messages.ERR_MSG_STATUS)
+
+
+
+
+
 
 def generateCSV(tickets):
-    with open('tickets.csv', 'w', newline='') as f_handle:
-        writer = csv.writer(f_handle)
+    with gzip.open("tickets.csv.gz", "wt", newline="") as file:
+        writer = csv.writer(file)
         titles = ["Id", "Title", "Author", "Date", "Description", "Status"]
         writer.writerow(titles)
         for ticket in tickets:
@@ -43,8 +49,8 @@ def generateCSV(tickets):
                              ticket['author'],
                              ticket['date'],
                              ticket['description'],
-                             ticket['status']))
-        f_handle.close()
+                             ticket['status'],
+                             ))
 
 
 def generateHistory(address ,operation):
@@ -59,7 +65,7 @@ def generateHistory(address ,operation):
 
 def printableTicket(d):
    for key in d:
-       print("Id:",key['id'],"\n",
+       print("==============================","\n\n","#Ticket Id:",key['id'],"\n",
 
        "Title:",key['title'],"\n",
 
@@ -69,11 +75,7 @@ def printableTicket(d):
 
        "Description:",key['description'],"\n",
 
-       "Status:",key['status'],"\n",
-             "-------------------------------------")
-
-
-
+       "Status:",key['status'],"\n\n")
 
 
 def clearTerminal():

@@ -1,57 +1,84 @@
 import getopt
-
-import messages
+import sys
+import time
 from parserUtilities import *
-from utils import formatDate, checkStatus
-from dbFunctions import *
+from utils import *
+
 
 
 def mainClientCLI():
     print(messages.CLIENT_MENU)
 
     choosedOption = input("Option ")
+
     parsedOption = parseSpaces(choosedOption)
 
-    (option, arg) = getopt.getopt(parsedOption[0:], 'i l e x o', ["insert", "list", "edit", "export", "exit"])
+    try:
+        (option, arg) = getopt.getopt(parsedOption[0:], 'i l e x o c',
+                                      ["insert", "list", "edit", "export", "exit", "clear"])
+
+    except getopt.GetoptError as err:
+
+        print(str(err))
+
+        sys.exit()
+
+
 
     destination = ('EXIT')
 
     for op, value in option:
 
-        if op in ('--insert', '-i') and value == '':
+        if op in ('--insert', '-i'):
 
             destination = ('INSERT')
-        elif op in ('--list', '-l') and value == 'F':
+
+        elif op in ('--list', '-l'):
 
             destination = ('LIST')
 
-        elif op in ('--list','-l') and value == '':
+        elif op in ('--list','-l'):
+
             destination= ('LIST')
-            expandable = False
-        elif op in ('--edit', '-e') and value == '':
+
+        elif op in ('--edit', '-e'):
 
             destination =('EDIT')
 
-        elif op in ('--export', '-x') and value == '':
+        elif op in ('--export', '-x'):
 
             destination = ('EXPORT')
 
-        elif op in ('--exit','-o')and value =='':
+        elif op in ('--exit','-o'):
+
             destination = ('EXIT')
+
+        elif op in('--clear','-c' ) :
+
+            destination = ('CLEAR')
 
     return destination
 
 def clientAddCLI():
 
-    print(messages.OPT_ADD_TICK)
-
     ticket = []
+
+    time.sleep(1)
 
     chosedOPT = input("command: ")
 
     parsedOPT = parseSpaces(chosedOPT)
 
-    (option, arg) = getopt.getopt(parsedOPT[0:], 't:a:d:')
+    try:
+
+        (option, arg) = getopt.getopt(parsedOPT[0:], 't:a:d:')
+
+    except getopt.GetoptError as err:
+
+        print(str(err))
+
+        sys.exit()
+
 
 
     for (op, ar) in option:
@@ -75,13 +102,20 @@ def clientAddCLI():
 
 def clientListCLI():
 
-    print(messages.OPT_LIST_TICK)
+    chosed_opt = input("command:")
 
-    chosedOPT = input("command: ")
+    parsed_opt = parseSpaces(chosed_opt)
 
-    parsedOPT = parseSpaces(chosedOPT)
+    try:
 
-    (option, arg) = getopt.getopt(parsedOPT[0:], 'p:a:d:s:v')
+        (option, arg) = getopt.getopt(parsed_opt[0:], 'p:a:d:s:v')
+
+    except getopt.GetoptError as err:
+
+        print(str(err))
+
+        sys.exit()
+
 
     filters_applied = []
 
@@ -105,29 +139,48 @@ def clientListCLI():
             present_author = "author"
 
             filters_applied.append(present_author)
+
             ticket['author'] = author
 
         elif op == '-d':
-            date =ar
 
-            searchDate = formatDate(date)
+            date = ar
 
-            present_date = "date"
+            try:
+                searchDate = formatDate(date)
 
-            filters_applied.append(present_date)
-            ticket['date'] = searchDate
+                present_date = "date"
+
+                filters_applied.append(present_date)
+
+                ticket['date'] = searchDate
+
+            except ValueError:
+
+                print(messages.ERR_MSG_DATE)
+
+                sys.exit()
 
         elif op == '-s':
 
             status =str(ar)
 
-            checkStatus(status)
+            try:
+                checkStatus(status)
 
-            present_status = "status"
+                present_status = "status"
 
-            filters_applied.append(present_status)
+                filters_applied.append(present_status)
 
-            ticket['status'] = status
+                ticket['status'] = status
+
+            except ValueError:
+
+                print(messages.ERR_MSG_STATUS)
+
+                sys.exit()
+
+
 
         elif op =='-v':
             none_filters = str(ar)
@@ -138,48 +191,80 @@ def clientListCLI():
 
             ticket['without'] = none_filters
 
-    return  filters_applied, ticket
+    return filters_applied, ticket
 
 def cliientEditCLI():
-
-    print(messages.OPT_EDIT_TICK)
-    print(messages.OPT_EXPORT_TICK)
 
     chosedOPT = input("command: ")
 
     parsedOPT = parseSpaces(chosedOPT)
 
-    (option, arg) = getopt.getopt(parsedOPT[0:], 'i:t:d:s:')
+    try:
 
-    ticket = []
+        (option, arg) = getopt.getopt(parsedOPT[0:], 'i:t:d:s:')
+
+    except getopt.GetoptError as err:
+
+        print((str(err)))
+
+        sys.exit()
+
+    modifiers = []
+
+    ticket = {}
+
     for (op, ar) in option:
         if op == '-i':
 
-            id = int(ar)
+            id = ar
 
+            present_id = "id"
 
-            ticket.append(id)
+            modifiers.append(present_id)
+
+            ticket['id'] = id
 
         elif op == '-t':
             title = ar
 
-            ticket.append(title)
+            present_title = "title"
+
+            modifiers.append(present_title)
+
+            ticket['title']=title
 
         elif op == '-s':
 
             status = str(ar)
 
-            checkStatus(status)
+            try:
+                checkStatus(status)
 
-            ticket.append(status)
+                present_status = "status"
+
+                modifiers.append(present_status)
+
+                ticket['status'] = (status)
+
+            except ValueError:
+
+                print(messages.ERR_MSG_STATUS)
+
+                sys.exit()
+
+
+
         elif op == '-d':
 
             description = str(ar)
 
-            ticket.append(description)
+            present_description = "description"
 
+            modifiers.append(present_description)
 
-    return ticket
+            ticket['description'] = description
+
+    return modifiers , ticket
 
 
 

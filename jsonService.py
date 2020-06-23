@@ -4,16 +4,11 @@ def sendJson(data):
 
     return json.dumps(data)
 
-
-
-
 def convertDateJson(o):
 
     if isinstance(o, datetime.datetime):
 
         return o.__str__()
-
-
 
 def recvJson(recv_data):
 
