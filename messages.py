@@ -68,6 +68,10 @@ TCKT_BRD = "A client created a ticket"
 
 TCKTS_LISTED =">>Send: List of tickets to client: "
 
+TCKTS_EDITING = "Tickets that are being edited IDS:"
+
+TCKTS_SAME = "The same ticket is being edited: ID: "
+
 CLIENTS_NEWT_CREATED= "A new ticket was created"
 
 CLIENT_EXPORT_SUCCESS= "Tickets exported in your directory"

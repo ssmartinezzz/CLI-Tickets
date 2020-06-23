@@ -9,7 +9,7 @@ import messages
 import server_functions
 
 
-def newClient(clientsocket, address, lock):
+def newClient(clientsocket, address, lock, current_ids):
 
     print(messages.SV_THREAD, threading.get_ident())
 
@@ -32,7 +32,7 @@ def newClient(clientsocket, address, lock):
 
             elif client_opt.decode() == 'EDIT':
 
-                server_functions.server_editTicket(clientsocket, ip, client_opt)
+                server_functions.server_editTicket(clientsocket, ip, client_opt,current_ids)
 
             elif client_opt.decode() == 'EXPORT':
 
@@ -78,6 +78,8 @@ if __name__ == "__main__":
 
     signal.signal(signal.SIGUSR1, sendMessageAsyn)
 
+    current_ids = list()
+
     try:
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -114,7 +116,7 @@ if __name__ == "__main__":
 
             socket_list.append(client_data)
 
-            th = threading.Thread(target=newClient, args=(c, addr, lock,))
+            th = threading.Thread(target=newClient, args=(c, addr, lock,current_ids,))
 
             threads_list.append(th)
 

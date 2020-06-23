@@ -47,7 +47,9 @@ def server_list(clientsocket,ip,client_opt):
 
     generateHistory(ip, client_opt.decode())
 
-def server_editTicket(clientsocket,ip,client_opt):
+def server_editTicket(clientsocket,ip,client_opt ,current_ids):
+
+    event = threading.Event()
 
     clientsocket.send(messages.OPT_EDIT_TICK.encode())
 
@@ -75,13 +77,40 @@ def server_editTicket(clientsocket,ip,client_opt):
 
         params_applied = editionFiltred(recievingId, modifiers_decoded, data_ticket)
 
-        editTicket(recievingId, params_applied)
+        if recievingId in current_ids:
+
+            print(messages.TCKTS_SAME,recievingId)
+
+            event.clear()
+
+        elif recievingId not in current_ids:
+
+            event.set()
+
+            current_ids.append(recievingId)
+
+            print(messages.TCKTS_EDITING, current_ids)
+
+        while event.is_set():
+
+            editTicket(recievingId, params_applied)
+
+            print(messages.TCKT_EDITED, ip)
+
+            event.clear()
+
+        time.sleep(3)
 
         edited_ticket = getTicketbyId(recievingId)
 
         clientsocket.send(dumpTicket(edited_ticket).encode())
 
-        print(messages.TCKT_EDITED, ip)
+        try:
+
+            current_ids.remove(recievingId)
+
+        except ValueError:
+            pass
 
     else:
 
