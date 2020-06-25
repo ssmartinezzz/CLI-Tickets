@@ -33,7 +33,7 @@ def exportTickets(socket, filtersapplied, ticketData):
 
     else:
 
-        generateCSV(list_tickets)
+        generate_csv(list_tickets)
 
         print(messages.CLIENT_EXPORT_SUCCESS)
 
@@ -45,7 +45,7 @@ def client_ticketInsertion(client, destination):
     @param destination: The main action that is executed, e.g List | Insert | export).
     This value is sent to the Server.
     """
-    clearTerminal()
+    clear_terminal()
 
     client.send(destination.encode())
 
@@ -68,7 +68,7 @@ def client_ticketList(client, destination):
     """
     client.send(destination.encode())
 
-    clearTerminal()
+    clear_terminal()
 
     print(client.recv(1024).decode())
 
@@ -106,7 +106,7 @@ def client_ticketEdition(client, destination):
     @param client: (Socket Object for communication)
     @param destination: (value of the current action that is being executed)
     """
-    clearTerminal()
+    clear_terminal()
 
     client.send(destination.encode())
 
@@ -114,7 +114,7 @@ def client_ticketEdition(client, destination):
 
     modifiers, ticket_toedit = cliController.cliientEditCLI()
 
-    correct_input_id = idValidator(ticket_toedit['id'])
+    correct_input_id = id_validator(ticket_toedit['id'])
 
     if correct_input_id:
 
@@ -150,7 +150,7 @@ def client_ticketExport(client, destination):
     """
     client.send(destination.encode())
 
-    clearTerminal()
+    clear_terminal()
 
     print(client.recv(1024).decode())
 
@@ -174,7 +174,7 @@ def client_clearTerminal(client, destination):
     @param client: (Socket object for communication)
     @param destination: (Value of the current action that is sent to the server through the socket object)
     """
-    clearTerminal()
+    clear_terminal()
 
     client.send(destination.encode())
 
@@ -186,7 +186,7 @@ def client_exit(client, destination):
     @param destination: (Value of the operation executed, is sent to the server through the socket object)
 
     """
-    clearTerminal()
+    clear_terminal()
 
     client.send(destination.encode())
 

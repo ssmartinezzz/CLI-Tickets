@@ -178,7 +178,7 @@ def filteredCLI():
             date = ar
 
             try:
-                searchDate = formatDate(date)
+                searchDate = date_format(date)
 
                 present_date = "date"
 
@@ -197,7 +197,7 @@ def filteredCLI():
             status =str(ar)
 
             try:
-                checkStatus(status)
+                check_status(status)
 
                 present_status = "status"
 
@@ -283,7 +283,7 @@ def cliientEditCLI():
             status = str(ar)
 
             try:
-                checkStatus(status)
+                check_status(status)
 
                 present_status = "status"
 

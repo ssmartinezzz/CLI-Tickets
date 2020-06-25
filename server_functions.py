@@ -19,7 +19,7 @@ def server_insertion(clientsocket, lock,ip,client_opt):
 
     clientsocket.send(messages.TCKT_CREATED.encode())
 
-    generateHistory(ip, client_opt.decode())
+    generate_history(ip, client_opt.decode())
 
     os.kill(os.getpid(), signal.SIGUSR1)
 
@@ -45,7 +45,7 @@ def server_list(clientsocket,ip,client_opt):
 
     print(messages.TCKTS_LISTED, ip)
 
-    generateHistory(ip, client_opt.decode())
+    generate_history(ip, client_opt.decode())
 
 def server_editTicket(clientsocket,ip,client_opt):
 
@@ -87,7 +87,7 @@ def server_editTicket(clientsocket,ip,client_opt):
 
         clientsocket.send(messages.ERR_MSG_NOAVAILABLE.encode())
 
-    generateHistory(ip, client_opt.decode())
+    generate_history(ip, client_opt.decode())
 
 def server_exportTicket(clientsocket,ip,client_opt):
 
@@ -111,10 +111,10 @@ def server_exportTicket(clientsocket,ip,client_opt):
 
     print(messages.NEW_PROCESS, ip)
 
-    generateHistory(ip, client_opt.decode())
+    generate_history(ip, client_opt.decode())
 
 def server_clear(ip,client_opt):
 
     print(messages.CLIENT_CLEARED, ip)
 
-    generateHistory(ip, client_opt.decode())
+    generate_history(ip, client_opt.decode())
