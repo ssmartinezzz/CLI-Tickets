@@ -88,7 +88,13 @@ def client_ticketList(client, destination):
 
     list_tickets = eval(ticket_search)
 
-    print(list_tickets)
+    if list_tickets[0] == messages.ERR_MSG_NOAVAILABLE:
+
+        print(messages.ERR_MSG_NOAVAILABLE)
+
+    else:
+
+        print(list_tickets)
 
 def client_ticketEdition(client, destination):
     """
