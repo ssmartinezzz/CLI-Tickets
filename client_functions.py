@@ -55,7 +55,7 @@ def client_ticketInsertion(client, destination):
 
     ticket = {'title': cliTick[0], 'author': cliTick[1], 'description': cliTick[2]}
 
-    client.send(sendJson(ticket).encode())
+    client.send(send_json(ticket).encode())
 
     print(client.recv(1024).decode())
 
@@ -74,9 +74,9 @@ def client_ticketList(client, destination):
 
     filtersapplied, ticketData = cliController.filteredCLI()
 
-    filtersapplied = sendJson(filtersapplied)
+    filtersapplied = send_json(filtersapplied)
 
-    ticketData = sendJson(ticketData)
+    ticketData = send_json(ticketData)
 
     client.send(filtersapplied.encode())
 
@@ -120,9 +120,9 @@ def client_ticketEdition(client, destination):
 
         id = ticket_toedit['id']
 
-        modifiers = sendJson(modifiers)
+        modifiers = send_json(modifiers)
 
-        ticket_toedit = sendJson(ticket_toedit)
+        ticket_toedit = send_json(ticket_toedit)
 
         client.send(str(id).encode())
 
@@ -134,7 +134,7 @@ def client_ticketEdition(client, destination):
 
             editedTicket = client.recv(1024)
 
-            print(recvJson(editedTicket.decode()))
+            print(recv_json(editedTicket.decode()))
 
         else:
             print(messages.ERR_MSG_NOAVAILABLE)
@@ -156,9 +156,9 @@ def client_ticketExport(client, destination):
 
     filtersapplied, ticketData = cliController.filteredCLI()
 
-    filtersapplied = sendJson(filtersapplied)
+    filtersapplied = send_json(filtersapplied)
 
-    ticketData = sendJson(ticketData)
+    ticketData = send_json(ticketData)
 
     paralell_p = multiprocessing.Process(target=exportTickets, args=(client, filtersapplied, ticketData,))
 

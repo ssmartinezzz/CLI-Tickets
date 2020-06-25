@@ -13,7 +13,7 @@ def server_insertion(clientsocket, lock,ip,client_opt):
 
     ticketrecv = clientsocket.recv(1024)
 
-    decoded_t = recvJson(ticketrecv.decode())
+    decoded_t = recv_json(ticketrecv.decode())
 
     add_ticket(decoded_t, lock)
 
@@ -35,7 +35,7 @@ def server_list(clientsocket,ip,client_opt):
 
     filters_decoded = json.loads(client_filters)
 
-    data_ticket = recvJson(data_ticket.decode())
+    data_ticket = recv_json(data_ticket.decode())
 
     result = filter_action(filters_decoded, data_ticket)
 
@@ -71,7 +71,7 @@ def server_editTicket(clientsocket,ip,client_opt):
 
         modifiers_decoded = json.loads(modifiers)
 
-        data_ticket = recvJson(data_ticket.decode())
+        data_ticket = recv_json(data_ticket.decode())
 
         params_applied = edition_filter(recievingId, modifiers_decoded, data_ticket)
 
@@ -101,7 +101,7 @@ def server_exportTicket(clientsocket,ip,client_opt):
 
     filters_decoded = json.loads(client_filters)
 
-    data_ticket = recvJson(data_ticket.decode())
+    data_ticket = recv_json(data_ticket.decode())
 
     result = filter_action(filters_decoded, data_ticket)
 
