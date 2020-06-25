@@ -15,7 +15,7 @@ def server_insertion(clientsocket, lock,ip,client_opt):
 
     decoded_t = recvJson(ticketrecv.decode())
 
-    addTicket(decoded_t, lock)
+    add_ticket(decoded_t, lock)
 
     clientsocket.send(messages.TCKT_CREATED.encode())
 
@@ -55,7 +55,7 @@ def server_editTicket(clientsocket,ip,client_opt):
 
     recievingId = recievingId.decode()
 
-    ticketexists = existsTicket(recievingId)
+    ticketexists = exists_ticket(recievingId)
 
     if ticketexists == True:
 
@@ -75,9 +75,9 @@ def server_editTicket(clientsocket,ip,client_opt):
 
         params_applied = editionFiltred(recievingId, modifiers_decoded, data_ticket)
 
-        editTicket(recievingId, params_applied)
+        edit_ticket(recievingId, params_applied)
 
-        edited_ticket = getTicketbyId(recievingId)
+        edited_ticket = getticketbyid(recievingId)
 
         clientsocket.send(dumpTicket(edited_ticket).encode())
 

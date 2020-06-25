@@ -32,12 +32,6 @@ def checkStatus(status):
     else:
         raise ValueError
 
-
-
-
-
-
-
 def generateCSV(tickets):
     with gzip.open("tickets.csv.gz", "wt", newline="") as file:
         writer = csv.writer(file)

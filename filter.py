@@ -2,7 +2,7 @@ from dbFunctions import *
 
 def filterAction(filters,values):
 
-    tickets = listTicketsbyDateAuthOrStatus()
+    tickets = list_tickets()
 
     if"without"in filters:
 
@@ -45,12 +45,9 @@ def filterAction(filters,values):
 
 def editionFiltred(id,modifiers,dataTicket):
 
-    ticketModeable = session.query(Ticket).get(int(id))
+    ticket_modeable = session.query(Ticket).get(int(id))
 
-    local_attributes = []
-    local_attributes.append(ticketModeable.title)
-    local_attributes.append(ticketModeable.description)
-    local_attributes.append(ticketModeable.status)
+    local_attributes = [ticket_modeable.title, ticket_modeable.description, ticket_modeable.status]
 
     if "title" in modifiers and "description" in modifiers and "status" in modifiers:
 
