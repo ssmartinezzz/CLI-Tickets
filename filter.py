@@ -1,7 +1,14 @@
 from dbFunctions import *
 
-def filterAction(filters,values):
-
+def filter_action(filters, values):
+    """
+    Functions that depending on the filters applied by the client would
+    filter the query of all tickets and return a list of them paginated.
+    Size(0-6)
+    @param filters: array that contains the name of the filters applied by the client
+    @param values: values of the different filters that are going to be applied.
+    @return: returns a list containing the results of the application of filters.
+    """
     tickets = list_tickets()
 
     if"without"in filters:
@@ -29,22 +36,32 @@ def filterAction(filters,values):
             tickets = tickets.filter(Ticket.status == values['status'])
 
         pag = 0
+
         if "pagination" in filters:
+
             pag = values['pagination']
+
         tickets = tickets.slice((pag * 6), ((pag* 6) + 6))
 
-    array = list()
+    tickets_list = list()
 
     result = tickets.all()
 
     for ticket in result:
 
-        array.append(ticket.ticketToJson())
+        tickets_list.append(ticket.ticketToJson())
 
-    return array
+    return tickets_list
 
-def editionFiltred(id,modifiers,dataTicket):
+def edition_filter(id, modifiers, dataTicket):
+    """
+    Function that implents Boolean Algebra for implementing simultaneous edition of a Ticket
 
+    @param id: Identificator of the Ticket that is going to be edited.
+    @param modifiers: Array that contains the name of the modifiers that are going to be applied on the Ticket.
+    @param dataTicket: Values of the different modifiers
+    @return: returns an Array containing the changes in a Ticket
+    """
     ticket_modeable = session.query(Ticket).get(int(id))
 
     local_attributes = [ticket_modeable.title, ticket_modeable.description, ticket_modeable.status]

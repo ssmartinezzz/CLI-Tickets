@@ -37,7 +37,7 @@ def server_list(clientsocket,ip,client_opt):
 
     data_ticket = recvJson(data_ticket.decode())
 
-    result = filterAction(filters_decoded, data_ticket)
+    result = filter_action(filters_decoded, data_ticket)
 
     result = str(result)
 
@@ -73,7 +73,7 @@ def server_editTicket(clientsocket,ip,client_opt):
 
         data_ticket = recvJson(data_ticket.decode())
 
-        params_applied = editionFiltred(recievingId, modifiers_decoded, data_ticket)
+        params_applied = edition_filter(recievingId, modifiers_decoded, data_ticket)
 
         edit_ticket(recievingId, params_applied)
 
@@ -103,7 +103,7 @@ def server_exportTicket(clientsocket,ip,client_opt):
 
     data_ticket = recvJson(data_ticket.decode())
 
-    result = filterAction(filters_decoded, data_ticket)
+    result = filter_action(filters_decoded, data_ticket)
 
     result = str(result)
 

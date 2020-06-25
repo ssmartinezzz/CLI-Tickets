@@ -64,9 +64,9 @@ def exists_ticket(id):
         else:
 
             val = False
-
+            
     except ValueError:
-
+        
         val = False
 
     return val
@@ -75,8 +75,8 @@ def getticketbyid(id):
     """
     It gets from the database the Ticket object with the given ID.
     @param id: represents the ID of the Ticket.
-    @return:Returns the Ticket object converted to a Json object
-    so the server socket can send it.
+    @return:Returns the Ticket object converted to a Json object 
+    so the server socket can send it. 
     """
     ticket = session.query(Ticket).get(int(id))
 
@@ -85,7 +85,7 @@ def getticketbyid(id):
 def edit_ticket(id, params_applied):
     """
     Function that edits the given ticket ID with the given applied parameters
-    @param id: Ticket Identificator that represents the ticket that is going to be edited
+    @param id: Ticket Identificator that represents the ticket that is going to be edited 
     @param params_applied: Modifications did on the Ticket, if a value wasn't changed
     it would be replace as well but with the same existing value. 
     """
