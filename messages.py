@@ -1,3 +1,7 @@
+"""
+This python file contains all the messages or strings that are shown in
+client terminals as well as server's terminal.
+"""
 
 SV_START = "Server starting...\n"
 
