@@ -4,9 +4,20 @@ import time
 from parserUtilities import *
 from utils import *
 
-
-
 def mainClientCLI():
+    """
+    main Cli function that displays the options available for operating
+    with the system. This function asks for an option, it parses the
+    input-inserted string and it uses on the getopt recognition.
+
+    The correct options for this function are --insert | --list | --edit
+    | --export | --exit | --clear
+    obviously, if they've short options, they're going to be recognized too.
+
+    @return: it returns the value of the chosed option called "destination".
+    That value is used in the future by other functions in the client as in the server.
+
+    """
     print(messages.CLIENT_MENU)
 
     choosedOption = input("Option ")
@@ -22,8 +33,6 @@ def mainClientCLI():
         print(str(err))
 
         sys.exit()
-
-
 
     destination = ('EXIT')
 
@@ -60,10 +69,20 @@ def mainClientCLI():
     return destination
 
 def clientAddCLI():
-
+    """
+    function that is implemented when the client selects the 'insert' option
+    This function ask for the different required values for inserting
+    a new ticket, such as Title, Author and Description.
+    When these values are inserted, the result string is parsed, and
+    the getopt.getopt method tries to identify that options and values
+    
+    The values are appended to an array named ticket.
+    
+    @return: It returns the ticket array which contains the values of a new Ticket.
+    These values are going to be sent to the server, who is in charge of uploading ticket
+    to the db.
+    """
     ticket = []
-
-    time.sleep(1)
 
     chosedOPT = input("command: ")
 
@@ -78,8 +97,6 @@ def clientAddCLI():
         print(str(err))
 
         sys.exit()
-
-
 
     for (op, ar) in option:
 
@@ -100,8 +117,22 @@ def clientAddCLI():
 
     return ticket
 
-def clientListCLI():
+def filteredCLI():
+    """
+    Function that recognizes the values entered, that are going to be applied
+    when the client list or export a group of Tickets.
 
+    This function asks for options like "pagination", "author","description"
+    "status" or "all"
+    These options and values are saved in one string, which is going to be parsed by parseSpaces()
+    and reconized by getopt()
+
+    As the filter could be applied simultaneously, the function will save the name of the filters applied in
+    an array, but the ticket values are going to be save for now in a dictionary.
+
+    @return:(This function will return 2 things: First, an array with the applied filters and
+    second, a dictionary with the values that are going to be applied in the filter.)
+    """
     chosed_opt = input("command:")
 
     parsed_opt = parseSpaces(chosed_opt)
@@ -194,7 +225,21 @@ def clientListCLI():
     return filters_applied, ticket
 
 def cliientEditCLI():
+    """
+    unction that recognizes the values entered, that are going to be applied
+    when the client edit one Ticket.
 
+    This function asks for options like "author", "Title","description"
+    "status" or "Id"
+    The most important value to specify is the id.
+    These options and values are saved in one string, which is going to be parsed by parseSpaces()
+    and reconized by getopt()
+
+    Options are saved in modifiers (Array) and arguments are saved in ticket (Dictionary)
+
+    @return: This function returns the modifiers applied to a specific ticked and
+    also returns their values saved in ticket.
+    """
     chosedOPT = input("command: ")
 
     parsedOPT = parseSpaces(chosedOPT)
@@ -264,7 +309,7 @@ def cliientEditCLI():
 
             ticket['description'] = description
 
-    return modifiers , ticket
+    return modifiers, ticket
 
 
 

@@ -66,7 +66,7 @@ def client_ticketList(client, destination):
 
     print(client.recv(1024).decode())
 
-    filtersapplied, ticketData = cliController.clientListCLI()
+    filtersapplied, ticketData = cliController.filteredCLI()
 
     filtersapplied = sendJson(filtersapplied)
 
@@ -142,7 +142,7 @@ def client_ticketExport(client, destination):
 
     print(client.recv(1024).decode())
 
-    filtersapplied, ticketData = cliController.clientListCLI()
+    filtersapplied, ticketData = cliController.filteredCLI()
 
     filtersapplied = sendJson(filtersapplied)
 
