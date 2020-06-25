@@ -22,7 +22,7 @@ def mainClientCLI():
 
     choosedOption = input("Option ")
 
-    parsedOption = parseSpaces(choosedOption)
+    parsedOption = parse_spaces(choosedOption)
 
     try:
         (option, arg) = getopt.getopt(parsedOption[0:], 'i l e x o c',
@@ -86,7 +86,7 @@ def clientAddCLI():
 
     chosedOPT = input("command: ")
 
-    parsedOPT = parseSpaces(chosedOPT)
+    parsedOPT = parse_spaces(chosedOPT)
 
     try:
 
@@ -135,7 +135,7 @@ def filteredCLI():
     """
     chosed_opt = input("command:")
 
-    parsed_opt = parseSpaces(chosed_opt)
+    parsed_opt = parse_spaces(chosed_opt)
 
     try:
 
@@ -242,7 +242,7 @@ def cliientEditCLI():
     """
     chosedOPT = input("command: ")
 
-    parsedOPT = parseSpaces(chosedOPT)
+    parsedOPT = parse_spaces(chosedOPT)
 
     try:
 
