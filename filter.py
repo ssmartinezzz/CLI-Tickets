@@ -55,7 +55,7 @@ def filter_action(filters, values):
     else:
 
         for ticket in result:
-        
+
             tickets_list.append(ticket.ticketToJson())
 
     return tickets_list

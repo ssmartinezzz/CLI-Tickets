@@ -27,11 +27,17 @@ def exportTickets(socket, filtersapplied, ticketData):
 
     list_tickets = eval(ticket_search)
 
-    generateCSV(list_tickets)
+    if list_tickets[0] == messages.ERR_MSG_NOAVAILABLE:
 
-    print(messages.CLIENT_EXPORT_SUCCESS)
+        print(messages.ERR_MSG_NOAVAILABLE)
 
-def client_ticketInsertion(client,destination):
+    else:
+
+        generateCSV(list_tickets)
+
+        print(messages.CLIENT_EXPORT_SUCCESS)
+
+def client_ticketInsertion(client, destination):
     """
     function that allows a client to send the specific values required
     to insert a new Ticket object in the database.
