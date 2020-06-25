@@ -1,4 +1,5 @@
 from dbFunctions import *
+import messages
 
 def filter_action(filters, values):
     """
@@ -47,9 +48,15 @@ def filter_action(filters, values):
 
     result = tickets.all()
 
-    for ticket in result:
+    if not result:
 
-        tickets_list.append(ticket.ticketToJson())
+        tickets_list.append(messages.ERR_MSG_NOAVAILABLE)
+
+    else:
+
+        for ticket in result:
+        
+            tickets_list.append(ticket.ticketToJson())
 
     return tickets_list
 
