@@ -21,7 +21,7 @@ def server_insertion(clientsocket, lock,ip,client_opt):
 
     generate_history(ip, client_opt.decode())
 
-    os.kill(os.getpid(), signal.SIGUSR1)
+    "os.kill(os.getpid(), signal.SIGUSR1)"
 
 def server_list(clientsocket,ip,client_opt):
 

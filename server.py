@@ -7,10 +7,20 @@ from json import JSONDecodeError
 
 import messages
 import server_functions
-
-
-def newClient(clientsocket, address, lock):
-
+"""
+Server main execution file. It could be executed specifying the port number with option -p, Otherwise it would try
+establishing connection on 8080 port.
+"""
+def new_client(clientsocket, address, lock):
+    """
+    Function that is executed by every single Thread launched from the Server,
+    here server's threads try to decode the destination of operation sent by clients
+    for doing tasks with tickets from the Database.
+    Depending on the destination, threads can call functions for Editing,Inserting, Modifying and Exporting Tickets.
+    @param clientsocket: Socket used for establishing connection with Clients
+    @param address: Address of a client (Ip,port)
+    @param lock: threading.Lock() used for mutex.
+    """
     print(messages.SV_THREAD, threading.get_ident())
 
     print(messages.SV_CONNECTION, address)
@@ -56,10 +66,11 @@ def newClient(clientsocket, address, lock):
 
     clientsocket.close()
 
-def sendMessageAsyn(s, f):
+"""def sendMessageAsyn(s, f):
     for sock, addr in socket_list:
         msg = messages.TCKT_CREATED + " \r\n"
-        """sock.send(msg.encode())"""
+        sock.send(msg.encode())
+        """
 
 if __name__ == "__main__":
 
@@ -76,7 +87,7 @@ if __name__ == "__main__":
 
     socket_list = []
 
-    signal.signal(signal.SIGUSR1, sendMessageAsyn)
+    "signal.signal(signal.SIGUSR1, sendMessageAsyn)"
 
     try:
 
@@ -114,11 +125,15 @@ if __name__ == "__main__":
 
             socket_list.append(client_data)
 
-            th = threading.Thread(target=newClient, args=(c, addr, lock,))
+            th = threading.Thread(target=new_client, args=(c, addr, lock,))
 
             threads_list.append(th)
 
             th.start()
+
+            for thread in threads_list:
+
+                thread.join(0.5)
 
         except KeyboardInterrupt or EOFError:
 
