@@ -42,11 +42,11 @@ def new_client(clientsocket, address, lock):
 
             elif client_opt.decode() == 'EDIT':
 
-                server_functions.server_editTicket(clientsocket, ip, client_opt)
+                server_functions.server_edit_ticket(clientsocket, ip, client_opt)
 
             elif client_opt.decode() == 'EXPORT':
 
-                server_functions.server_exportTicket(clientsocket, ip, client_opt)
+                server_functions.server_export_ticket(clientsocket, ip, client_opt)
 
             elif client_opt.decode() == 'CLEAR':
 
