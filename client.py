@@ -93,28 +93,21 @@ if __name__ == "__main__":
 
                 print(messages.OPT_WRONG)
 
-            """ client.settimeout(0.5)
+        except KeyboardInterrupt:
 
-                     try:
+            print("\n", messages.KYBRD_INTERRUPT)
 
-                         message = client.recv(1024).decode()
-                         if not message: break
-                     except socket.timeout:
-                         pass
-                     """
+            sys.exit()
 
-        except KeyboardInterrupt or EOFError or BrokenPipeError:
+        except EOFError:
 
-            if KeyboardInterrupt:
+            print("\n", messages.EOFE)
 
-                print("\n", messages.KYBRD_INTERRUPT)
+            sys.exit()
 
-            elif EOFError:
+        except BrokenPipeError:
 
-                print("\n", messages.EOFE)
-
-            elif BrokenPipeError:
-                print("\n",messages.ERR_MSG_BP)
+            print("\n", messages.ERR_MSG_BP)
 
             sys.exit()
 

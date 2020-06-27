@@ -56,6 +56,10 @@ def new_client(clientsocket, address, lock):
 
                 break
 
+            elif not client_opt:
+
+                break
+
         except JSONDecodeError:
 
             print(messages.ERR_MSG_COULDNT, ip)
@@ -128,6 +132,8 @@ if __name__ == "__main__":
             th = threading.Thread(target=new_client, args=(c, addr, lock,))
 
             threads_list.append(th)
+            "Deamon set"
+            th.daemon = True
 
             th.start()
 
@@ -135,17 +141,18 @@ if __name__ == "__main__":
 
                 thread.join(0.5)
 
-        except KeyboardInterrupt or EOFError:
+        except KeyboardInterrupt:
 
-            if KeyboardInterrupt:
-
-                print("\n", messages.KYBRD_INTERRUPT)
-
-            elif EOFError:
-
-                print("\n", messages.EOFE)
+            print("\n", messages.KYBRD_INTERRUPT)
 
             sys.exit()
+
+        except EOFError:
+
+            print("\n", messages.EOFE)
+
+            sys.exit()
+
 
 
 
