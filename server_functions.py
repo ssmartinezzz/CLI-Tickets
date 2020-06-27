@@ -73,7 +73,7 @@ def server_list(clientsocket, ip, client_opt):
 
     generate_history(ip, client_opt.decode())
 
-def server_edit_ticket(clientsocket, ip, client_opt):
+def server_edit_ticket(clientsocket, ip, client_opt, sem):
     """
     Function that allows the server's thread to edit a ticket given its ID.
 
@@ -90,6 +90,7 @@ def server_edit_ticket(clientsocket, ip, client_opt):
     @param clientsocket: Socket Object where the data is got and sent
     @param ip: Ip address of a client
     @param client_opt: Option chosen by client.
+    @param sem: Shared threading.Semaphore() object between threads that allows blocking when THREADS try to edit.
     """
     clientsocket.send(messages.OPT_EDIT_TICK.encode())
 
@@ -117,9 +118,15 @@ def server_edit_ticket(clientsocket, ip, client_opt):
 
         params_applied = edition_filter(recievingId, modifiers_decoded, data_ticket)
 
+        sem.acquire()
+
         edit_ticket(recievingId, params_applied)
 
         edited_ticket = getticketbyid(recievingId)
+
+        sem.release()
+
+        time.sleep(3)
 
         clientsocket.send(dumpTicket(edited_ticket).encode())
 

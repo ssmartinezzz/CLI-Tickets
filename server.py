@@ -11,21 +11,21 @@ import server_functions
 Server main execution file. It could be executed specifying the port number with option -p, Otherwise it would try
 establishing connection on 8080 port.
 """
-def new_client(clientsocket, address, lock):
+def new_client(clientsocket, lock, sem):
     """
     Function that is executed by every single Thread launched from the Server,
     here server's threads try to decode the destination of operation sent by clients
     for doing tasks with tickets from the Database.
     Depending on the destination, threads can call functions for Editing,Inserting, Modifying and Exporting Tickets.
     @param clientsocket: Socket used for establishing connection with Clients
-    @param address: Address of a client (Ip,port)
     @param lock: threading.Lock() used for mutex.
+    @param sem: threading.Semaphore() used for blocking while editing a Ticket.
     """
     print(messages.SV_THREAD, threading.get_ident())
 
-    print(messages.SV_CONNECTION, address)
-
     ip, host = clientsocket.getpeername()
+
+    print(messages.SV_CONNECTION, ip, host)
 
     while True:
 
@@ -42,7 +42,7 @@ def new_client(clientsocket, address, lock):
 
             elif client_opt.decode() == 'EDIT':
 
-                server_functions.server_edit_ticket(clientsocket, ip, client_opt)
+                server_functions.server_edit_ticket(clientsocket, ip, client_opt , sem)
 
             elif client_opt.decode() == 'EXPORT':
 
@@ -66,18 +66,11 @@ def new_client(clientsocket, address, lock):
 
             break
 
-    print(messages.SCK_CLOSED,addr)
+    print(messages.SCK_CLOSED, ip, host)
 
     clientsocket.close()
 
-"""def sendMessageAsyn(s, f):
-    for sock, addr in socket_list:
-        msg = messages.TCKT_CREATED + " \r\n"
-        sock.send(msg.encode())
-        """
-
 if __name__ == "__main__":
-
     "Default port instance, could be given by terminal anyway"
     port = 8080
 
@@ -117,6 +110,8 @@ if __name__ == "__main__":
 
     lock = threading.Lock()
 
+    sem = threading.Semaphore()
+
     while True:
 
         threads_list = list()
@@ -129,7 +124,7 @@ if __name__ == "__main__":
 
             socket_list.append(client_data)
 
-            th = threading.Thread(target=new_client, args=(c, addr, lock,))
+            th = threading.Thread(target=new_client, args=(c, lock, sem,))
 
             threads_list.append(th)
             "Deamon set"
