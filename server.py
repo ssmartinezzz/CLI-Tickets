@@ -2,9 +2,7 @@ import getopt
 import socket
 import threading
 import sys
-import signal
 from json import JSONDecodeError
-
 import messages
 import server_functions
 """
@@ -108,7 +106,7 @@ if __name__ == "__main__":
 
     print(messages.SV_WAITING)
 
-    lock = threading.Lock()
+    lock = threading.Lock() #Recursos compartidos.
 
     sem = threading.Semaphore()
 

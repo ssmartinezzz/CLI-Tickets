@@ -51,9 +51,9 @@ def client_ticketInsertion(client, destination):
 
     print(client.recv(1024).decode())
 
-    cliTick = cliController.clientAddCLI()
+    cli_tick = cliController.clientAddCLI()
 
-    ticket = {'title': cliTick[0], 'author': cliTick[1], 'description': cliTick[2]}
+    ticket = {'title': cli_tick[0], 'author': cli_tick[1], 'description': cli_tick[2]}
 
     client.send(send_json(ticket).encode())
 
@@ -63,7 +63,7 @@ def client_ticketList(client, destination):
     """
     function that allows a client to send the
     different values needed to list an existing Ticket
-    @param client:(Is the socket connection where the data is sent or recieved)
+    @param client:(Is the socket connection where the data is sent or received)
     @param destination:(The main action that is executed, e.g List | Insert | export)
     """
     client.send(destination.encode())
@@ -72,15 +72,15 @@ def client_ticketList(client, destination):
 
     print(client.recv(1024).decode())
 
-    filtersapplied, ticketData = cliController.filteredCLI()
+    filters_applied, ticket_data = cliController.filteredCLI()
 
-    filtersapplied = send_json(filtersapplied)
+    filters_applied = send_json(filters_applied)
 
-    ticketData = send_json(ticketData)
+    ticket_data = send_json(ticket_data)
 
-    client.send(filtersapplied.encode())
+    client.send(filters_applied.encode())
 
-    client.send(ticketData.encode())
+    client.send(ticket_data.encode())
 
     ticket_search = client.recv(1024)
 
@@ -132,9 +132,9 @@ def client_ticketEdition(client, destination):
 
             client.send(ticket_toedit.encode())
 
-            editedTicket = client.recv(1024)
+            edited_ticket = client.recv(1024)
 
-            print(recv_json(editedTicket.decode()))
+            print(recv_json(edited_ticket.decode()))
 
         else:
             print(messages.ERR_MSG_NOAVAILABLE)
@@ -154,13 +154,13 @@ def client_ticketExport(client, destination):
 
     print(client.recv(1024).decode())
 
-    filtersapplied, ticketData = cliController.filteredCLI()
+    filters_applied, ticket_data = cliController.filteredCLI()
 
-    filtersapplied = send_json(filtersapplied)
+    filters_applied = send_json(filters_applied)
 
-    ticketData = send_json(ticketData)
+    ticket_data = send_json(ticket_data)
 
-    paralell_p = multiprocessing.Process(target=exportTickets, args=(client, filtersapplied, ticketData,))
+    paralell_p = multiprocessing.Process(target=exportTickets, args=(client, filters_applied, ticket_data,))
 
     paralell_p.start()
 

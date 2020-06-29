@@ -23,9 +23,9 @@ def server_insertion(clientsocket, lock, ip, client_opt):
     """
     clientsocket.send(messages.OPT_ADD_TICK.encode())
 
-    ticketrecv = clientsocket.recv(1024)
+    ticket_recv = clientsocket.recv(1024)
 
-    decoded_t = recv_json(ticketrecv.decode())
+    decoded_t = recv_json(ticket_recv.decode())
 
     add_ticket(decoded_t, lock)
 
@@ -94,13 +94,11 @@ def server_edit_ticket(clientsocket, ip, client_opt, sem):
     """
     clientsocket.send(messages.OPT_EDIT_TICK.encode())
 
-    recievingId = clientsocket.recv(1024)
+    receiving_id = clientsocket.recv(1024).decode("utf-8")
 
-    recievingId = recievingId.decode()
+    ticketexists = exists_ticket(receiving_id)
 
-    ticketexists = exists_ticket(recievingId)
-
-    if ticketexists == True:
+    if ticketexists:
 
         msg = "EXISTS"
 
@@ -116,13 +114,13 @@ def server_edit_ticket(clientsocket, ip, client_opt, sem):
 
         data_ticket = recv_json(data_ticket.decode())
 
-        params_applied = edition_filter(recievingId, modifiers_decoded, data_ticket)
+        params_applied = edition_filter(receiving_id, modifiers_decoded, data_ticket)
 
         sem.acquire()
 
-        edit_ticket(recievingId, params_applied)
+        edit_ticket(receiving_id, params_applied)
 
-        edited_ticket = getticketbyid(recievingId)
+        edited_ticket = getticketbyid(receiving_id)
 
         sem.release()
 

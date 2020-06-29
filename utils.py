@@ -38,8 +38,12 @@ def check_status(status):
     ones, otherwise it would raise a ValueError
     @param status: status value of Ticket object
     """
-    if ((status == "pending") |(status == "in process") |(status == "solved")):
 
+    valid_status = ["pending",
+                    "in process",
+                    "solved"]
+
+    if status in valid_status:
         pass
 
     else:

@@ -12,7 +12,7 @@ def filter_action(filters, values):
     """
     tickets = list_tickets()
 
-    if"without"in filters:
+    if"without" in filters:
 
         if"pagination" in filters:
 
@@ -20,7 +20,7 @@ def filter_action(filters, values):
 
         else:
 
-            tickets = tickets.slice(0 , 6)
+            tickets = tickets.slice(0, 6)
 
     else:
 
@@ -42,7 +42,7 @@ def filter_action(filters, values):
 
             pag = values['pagination']
 
-        tickets = tickets.slice((pag * 6), ((pag* 6) + 6))
+        tickets = tickets.slice((pag * 6), ((pag * 6) + 6))
 
     tickets_list = list()
 

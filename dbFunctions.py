@@ -15,11 +15,11 @@ def add_ticket(data, lock):
     @param data: (Contains in a JSON format values of a ticket such as Title, Author and Description.)
     @param lock:  (threading.Lock() implementation that implements mutex)
     """
-    datetoday = datetime.date.today()
+    today = datetime.date.today()
 
     ticket = Ticket.jsonToTicket(data)
 
-    ticket.date = datetoday
+    ticket.date = today
 
     ticket.status = "pending"
 
@@ -91,6 +91,7 @@ def edit_ticket(id, params_applied):
     """
     ticket_modeable = session.query(Ticket).get(int(id))
 
+    "If only one attribute is modified in params_applied we'll have the first values of the ticket"
     ticket_modeable.title = params_applied[0]
 
     ticket_modeable.description = params_applied[1]

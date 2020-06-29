@@ -34,7 +34,7 @@ def mainClientCLI():
 
         sys.exit()
 
-    destination = ('EXIT')
+    destination = 'EXIT'
 
     for op, value in option:
 
@@ -45,10 +45,6 @@ def mainClientCLI():
         elif op in ('--list', '-l'):
 
             destination = ('LIST')
-
-        elif op in ('--list','-l'):
-
-            destination= ('LIST')
 
         elif op in ('--edit', '-e'):
 
@@ -102,16 +98,18 @@ def clientAddCLI():
 
         if op == '-t':
 
-            title= str(ar)
+            title = str(ar)
+
             ticket.append(title)
 
         elif op == '-a':
             author = str(ar)
+
             ticket.append(author)
 
         elif op == '-d':
 
-            description =str(ar)
+            description = str(ar)
 
             ticket.append(description)
 
@@ -133,9 +131,9 @@ def filteredCLI():
     @return:(This function will return 2 things: First, an array with the applied filters and
     second, a dictionary with the values that are going to be applied in the filter.)
     """
-    chosed_opt = input("command:")
+    chosen_opt = input("command:")
 
-    parsed_opt = parse_spaces(chosed_opt)
+    parsed_opt = parse_spaces(chosen_opt)
 
     try:
 
@@ -146,7 +144,6 @@ def filteredCLI():
         print(str(err))
 
         sys.exit()
-
 
     filters_applied = []
 
@@ -165,7 +162,7 @@ def filteredCLI():
 
         elif op == '-a':
 
-            author= str(ar)
+            author = str(ar)
 
             present_author = "author"
 
@@ -194,7 +191,7 @@ def filteredCLI():
 
         elif op == '-s':
 
-            status =str(ar)
+            status = str(ar)
 
             try:
                 check_status(status)
@@ -211,12 +208,10 @@ def filteredCLI():
 
                 sys.exit()
 
-
-
-        elif op =='-v':
+        elif op == '-v':
             none_filters = str(ar)
 
-            without_filters ="without"
+            without_filters = "without"
 
             filters_applied.append(without_filters)
 
@@ -296,8 +291,6 @@ def cliientEditCLI():
                 print(messages.ERR_MSG_STATUS)
 
                 sys.exit()
-
-
 
         elif op == '-d':
 
