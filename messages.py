@@ -58,7 +58,7 @@ ERR_MSG_DATE = "Invalid date input"
 
 ERR_MSG_NOAVAILABLE = "NOT FOUNDED RESOURCE"
 
-ERR_MSG_COULDNT = "SERVER COULDN'T RECIEVE DATA FROM CLIENT"
+ERR_MSG_COULDNT = "SERVER COULDN'T RECEIVE DATA FROM CLIENT"
 
 ERR_MSG_BP = "Broken pipe!"
 
@@ -66,15 +66,15 @@ TCKT_FOUND = "TICKET FOUNDED TO MODIFY:"
 
 TCKT_EDITED = ">>Ticket Edited by"
 
-TCKT_CREATED ="Ticket succesfully created!"
+TCKT_CREATED = "Ticket succesfully created!"
 
 TCKT_BRD = "A client created a ticket"
 
-TCKTS_LISTED =">>Send: List of tickets to client: "
+TCKTS_LISTED = ">>Send: List of tickets to client: "
 
-CLIENTS_NEWT_CREATED= "A new ticket was created"
+CLIENTS_NEWT_CREATED = "A new ticket was created"
 
-CLIENT_EXPORT_SUCCESS= "Tickets exported in your directory"
+CLIENT_EXPORT_SUCCESS = "Tickets exported in your directory"
 
 CLIENT_CLEARED = "A client cleared its own terminal"
 

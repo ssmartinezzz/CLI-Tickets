@@ -2,6 +2,10 @@
 
 Para el correcto funcionamiento, este sistema requiere llevar a cabo una serie de pasos.
 
+Se debe tener en cuenta que el sistema esta desarrollado para **MySQL** por lo que es requisito para su correcto funcionamiento tener instalado el mismo.
+
+También se debe tener en cuenta que ciertos módulos deben ser instalados en el entorno virtual como lo son: *PyMYSQL*, *python-doenv* entre otros.
+
 # Etapa 1: Creación de un entorno virtual
 Si ya usted ya posee Python instalado en su computadora, usted ya puede contar con las funcionalidades que el mismo posee, una de ellas es la creación de un entorno virtual, permitiendo instalar diferentes módulos sin afectar el funcionamiento general.
   - Realizar un entorno virtual a un directorio ya existente (Linux)
@@ -49,7 +53,9 @@ Para exportar las credenciales, deberá acceder al archivo y agregar las variabl
 `export DB_USERNAME=nombre_usuario_MySql`
 `export DB_PASS=contraseña_Mysql`
 
+El siguiente paso correspondiente es **Crear el schema o Base** en MySQL, una vez realizado esto, se debe especificar el nombre y localización de la misma en el archivo *dbConfiguration.py*
 
+Una vez creada la base de datos o *schema* **MySQL** se debe proceder a ejecutar el archivo *models.py* el cuál se encargará de las tablas en la base de datos que se especificó en el archivo de *dbConfiguration.py*
 
 
 ### Ejecución básica
