@@ -11,17 +11,17 @@ import client_functions
 if __name__ == "__main__":
     """
     main client function that tries to connect to the server by using a socket.
-    
+
     For creating the client socket, is required to specify two arguments when client.py is executed
-    
+
     @var a: It's the server ip address.
-    
+
     @var p: It's the server port number where the connection is going to be attended
-    
+
     step1: After a correct creation of the socket, the client will recieve the different options available for operating.
 
     step2: When an operation is completed,the main options will be shown again. {Insert,List,Edit,Export,Clear,exit}
-    
+
     """
 
     (opt, arg) = getopt.getopt(sys.argv[1:], 'a:p:')
@@ -51,7 +51,7 @@ if __name__ == "__main__":
         sys.exit()
 
     while True:
-
+        clear_terminal()
         try:
 
             destination = cliController.mainClientCLI()
@@ -109,12 +109,8 @@ if __name__ == "__main__":
             print("\n", messages.ERR_MSG_BP)
 
             sys.exit()
+        input("\n press a button...")
 
     print(messages.OPT_EXIT)
 
     client.close()
-
-
-
-
-
