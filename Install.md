@@ -55,7 +55,7 @@ Para exportar las credenciales, deberá acceder al archivo y agregar las variabl
 
 El siguiente paso correspondiente es **Crear el schema o Base** en MySQL, una vez realizado esto, se debe especificar el nombre y localización de la misma en el archivo *dbConfiguration.py*
 
-Una vez creada la base de datos o *schema* **MySQL** se debe proceder a ejecutar el archivo *models.py* el cuál se encargará de las tablas en la base de datos que se especificó en el archivo de *dbConfiguration.py*
+Una vez creada la base de datos o *schema* **MySQL** se debe proceder a ejecutar el archivo *models.py* el cuál se encargará de crear las tablas en la base de datos.
 
 
 ### Ejecución básica
